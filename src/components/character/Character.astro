@@ -7,33 +7,36 @@ import './character.css'; // Importar el CSS del personaje
 
 <!-- Código JavaScript -->
 <script type="module" is:inline>
-    document.addEventListener('DOMContentLoaded', () => {
-      const character = document.getElementById('character');
-      const mapContainer = document.getElementById('map-container');
-  
-      if (!mapContainer) {
-        console.error('mapContainer no está definido');
-        return;
-      }
-  
-      const handleClick = (e) => {
-        const rect = mapContainer.getBoundingClientRect();
-        const charWidth = character.offsetWidth;
-        const charHeight = character.offsetHeight;
-  
-        let x = e.clientX - rect.left - charWidth / 2;
-        let y = e.clientY - rect.top - charHeight / 2;
-  
-        // Ajustar las coordenadas para asegurar que el personaje esté dentro del contenedor
-        x = Math.max(0, Math.min(x, rect.width - charWidth));
-        y = Math.max(0, Math.min(y, rect.height - charHeight));
-  
-        // Mover el personaje directamente sin animación
-        character.style.left = `${x}px`;
-        character.style.top = `${y}px`;
-      };
-  
-      mapContainer.addEventListener('click', handleClick);
-    });
-  </script>
-  
+  // Ejecuta el código cuando el DOM esté completamente cargado
+  document.addEventListener('DOMContentLoaded', () => {
+    const character = document.getElementById('character'); // Obtiene el elemento del personaje por su ID
+    const mapContainer = document.getElementById('map-container'); // Obtiene el contenedor del mapa por su ID
+
+    if (!mapContainer) {
+      console.error('mapContainer no está definido'); // Muestra un error si el contenedor del mapa no está definido
+      return; // Sale de la función si no hay contenedor del mapa
+    }
+
+    // Maneja el evento de clic en el contenedor del mapa
+    const handleClick = (e) => {
+      const rect = mapContainer.getBoundingClientRect(); // Obtiene las dimensiones y posición del contenedor del mapa
+      const charWidth = character.offsetWidth; // Obtiene el ancho del personaje
+      const charHeight = character.offsetHeight; // Obtiene la altura del personaje
+
+      // Calcula las coordenadas para centrar el personaje en el punto clicado
+      let x = e.clientX - rect.left - charWidth / 2;
+      let y = e.clientY - rect.top - charHeight / 2;
+
+      // Ajusta las coordenadas para asegurar que el personaje esté dentro del contenedor
+      x = Math.max(0, Math.min(x, rect.width - charWidth));
+      y = Math.max(0, Math.min(y, rect.height - charHeight));
+
+      // Mueve el personaje directamente a las nuevas coordenadas sin animación
+      character.style.left = `${x}px`;
+      character.style.top = `${y}px`;
+    };
+
+    // Añade el evento de clic al contenedor del mapa
+    mapContainer.addEventListener('click', handleClick);
+  });
+</script>
