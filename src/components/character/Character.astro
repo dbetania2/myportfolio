@@ -1,0 +1,39 @@
+---
+import './character.css'; // Importar el CSS del personaje
+---
+
+<div id="character" class="character idle"></div> <!-- Personaje -->
+
+
+<!-- Código JavaScript -->
+<script type="module" is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      const character = document.getElementById('character');
+      const mapContainer = document.getElementById('map-container');
+  
+      if (!mapContainer) {
+        console.error('mapContainer no está definido');
+        return;
+      }
+  
+      const handleClick = (e) => {
+        const rect = mapContainer.getBoundingClientRect();
+        const charWidth = character.offsetWidth;
+        const charHeight = character.offsetHeight;
+  
+        let x = e.clientX - rect.left - charWidth / 2;
+        let y = e.clientY - rect.top - charHeight / 2;
+  
+        // Ajustar las coordenadas para asegurar que el personaje esté dentro del contenedor
+        x = Math.max(0, Math.min(x, rect.width - charWidth));
+        y = Math.max(0, Math.min(y, rect.height - charHeight));
+  
+        // Mover el personaje directamente sin animación
+        character.style.left = `${x}px`;
+        character.style.top = `${y}px`;
+      };
+  
+      mapContainer.addEventListener('click', handleClick);
+    });
+  </script>
+  

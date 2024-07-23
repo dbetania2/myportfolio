@@ -1,0 +1,46 @@
+/* index.css */
+body {
+  margin: 0;
+  overflow: hidden; /* Opcional: oculta las barras de desplazamiento si no son necesarias */
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+#map-container {
+  width: 800px;
+  height: 800px;
+  position: relative; /* Permite posicionar objetos absolutos dentro del contenedor */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#map-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Asegura que la imagen se ajuste sin distorsionarse */
+  image-rendering: pixelated; /* Mantiene la nitidez de los píxeles al hacer zoom */
+  position: absolute;
+}
+
+.map-object {
+  position: absolute; /* Permite posicionar los objetos dentro del mapa */
+  width: 35%;
+ 
+  image-rendering: pixelated; /* Mantiene la nitidez de los píxeles al hacer zoom */
+}
+
+/* Posicionamiento específico para cada objeto */
+#cama {
+  top: 320px;
+  left: 35px;
+}
+
+#pc {
+  top: 270px;
+  left: 450px;
+}
+

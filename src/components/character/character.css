@@ -1,0 +1,71 @@
+/* Estilos básicos del personaje */
+.character {
+  width: 32px; /* Tamaño del frame del personaje */
+  height: 32px;
+  position: absolute; /* Para posicionar el personaje dentro del contenedor */
+  background-repeat: no-repeat; /* No repetir la imagen del fondo */
+  transform: scale(4.3); /* Escalar el personaje al doble de su tamaño original */
+  transform-origin: bottom left; /* Ajusta el punto de origen del escalado */
+  overflow: hidden; /* Oculta las partes de la imagen que salen del contenedor */
+  image-rendering: pixelated;
+}
+
+/* Animaciones para cada dirección */
+.character.idle {
+  background-image: url('src/components/character/character-quieto/quieto.png');
+  animation: idleAnimation 1.5s steps(1) infinite;
+  background-size: 128px 32px; /* Tamaño total del spritesheet (ancho x alto) */
+}
+
+.character.right {
+  background-image: url('src/components/character/character-walk-right/character-walk-right.png');
+  animation: walkRightAnimation 2s steps(1) infinite;
+  background-size: 64px 32px; /* Tamaño total del spritesheet (ancho x alto) */
+}
+
+.character.left {
+  background-image: url('src/components/character/character-walk-left/character-walk-left.png');
+  animation: walkLeftAnimation 1s steps(1) infinite;
+  background-size: 64px 32px; /* Tamaño total del spritesheet (ancho x alto) */
+}
+
+.character.up {
+  background-image: url('src/components/character/character-walk-up/character-walk-up.png');
+  animation: walkUpAnimation 1.5s steps(1) infinite;
+  background-size: 94px 32px; /* Tamaño total del spritesheet (ancho x alto) */
+}
+
+.character.down {
+  background-image: url('src/components/character/character-walk-down/character-walk-down.png');
+  animation: walkDownAnimation 1.5s steps(1) infinite;
+  background-size: 94px 32px; /* Tamaño total del spritesheet (ancho x alto) */
+}
+
+/* Definición de las animaciones */
+@keyframes idleAnimation {
+  0% { background-position: 0 0; }
+  25% { background-position: -32px 0; }
+  50% { background-position: -64px 0; }
+  75% { background-position: -96px 0; }
+  100% { background-position: 0 0; }
+}
+
+@keyframes walkRightAnimation {
+  0% { background-position: 0 0; }
+  100% { background-position: -64px 0; } /* 2 frames de 32px cada uno */
+}
+
+@keyframes walkLeftAnimation {
+  0% { background-position: 0 0; }
+  100% { background-position: -64px 0; } /* 2 frames de 32px cada uno */
+}
+
+@keyframes walkUpAnimation {
+  0% { background-position: 0 0; }
+  100% { background-position: -96px 0; } /* 3 frames de 32px cada uno */
+}
+
+@keyframes walkDownAnimation {
+  0% { background-position: 0 0; }
+  100% { background-position: -96px 0; } /* 3 frames de 32px cada uno */
+}
