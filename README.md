@@ -1,38 +1,33 @@
-# Astro Starter Kit: Basics
+# Programming Portfolio
 
-# portafolio
-Este proyecto es mi portafolio personal.
-=======
-# Portafolio de Programación
+Welcome to my portfolio!
 
-¡Bienvenido a mi portafolio!
+## Description
 
-## Descripción
+This project is my personal portfolio, a website showcasing my information and programming projects. The homepage is designed as an interactive pixel art game, representing my bedroom in isometric perspective. Users can explore the room and discover interactive objects that reveal details about my skills and projects.
 
-Este proyecto es mi portafolio personal, una página web que muestra mi información y proyectos de programación. La página de inicio está diseñada como un juego interactivo en estilo pixel art, representando mi dormitorio en perspectiva isométrica. Los usuarios pueden explorar el cuarto y descubrir objetos interactivos que revelan detalles sobre mis habilidades y proyectos.
+## Features
 
-## Características
+- *Pixel Art Style:* Retro design with pixel art graphics for a charming and nostalgic aesthetic.
+- *Isometric Perspective:* Three-dimensional representation for a visually appealing environment.
+- *Interactivity:* Interactive objects that allow users to explore and discover information.
 
-- *Estilo Pixel Art:* Diseño retro con gráficos en pixel art para una estética encantadora y nostálgica.
-- *Perspectiva Isométrica:* Representación tridimensional para un entorno visualmente atractivo.
-- *Interactividad:* Objetos interactivos que permiten a los usuarios explorar y descubrir información.
-
-## Tecnologías Utilizadas
+## Technologies Used
 
 - *HTML*
 - *CSS*
 - *JavaScript*
-- *Astror*
+- *Astro*
 - *React*
 
-## Uso
+## Usage
 
-Explora la página de inicio para descubrir mis habilidades y proyectos. Haz clic en los objetos interactivos para obtener más información.
+Explore the homepage to discover my skills and projects. Click on the interactive objects for more information.
 
-## Contacto
+## Contact
 
-Puedes contactarme a través de [daiana076@gmail.com].
+You can reach me at [daiana076@gmail.com].
 
-## Derechos de Autor
+## Copyright
 
-© 2024 [Del Grecco Daiana]. Todos los derechos reservados.
+© 2024 [Del Grecco Daiana]. All rights reserved.
