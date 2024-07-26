@@ -1,7 +1,7 @@
 ---
 import Character from '../components/character/Character.astro'; // Ruta al componente 
 import Cama from '../objetos-img/cama.png';
-import Pc from '../objetos-img/pc.png';
+import PcComponent from '../components/pcComponent/PcComponent'; // Importa el componente React
 ---
 
 <!DOCTYPE html>
@@ -13,43 +13,43 @@ import Pc from '../objetos-img/pc.png';
   <link rel="stylesheet" href="/src/pages/index.css">
 </head>
 <body>
-  <div id="welcome-screen">
-    <div id="welcome-text">
-      <div class="word">
-        <span>W</span>
-        <span>e</span>
-        <span>l</span>
-        <span>c</span>
-        <span>o</span>
-        <span>m</span>
-        <span>e</span>
-      </div>
-      <div class="word">
-        <span>t</span>
-        <span>o</span>
-      </div>
-      <div class="word">
-        <span>m</span>
-        <span>y</span>
-      </div>
-      <div class="word">
-        <span>p</span>
-        <span>o</span>
-        <span>r</span>
-        <span>t</span>
-        <span>f</span>
-        <span>o</span>
-        <span>l</span>
-        <span>i</span>
-        <span>o</span>
-      </div>
+<div id="welcome-screen">
+  <div id="welcome-text">
+    <div class="word">
+      <span>W</span>
+      <span>e</span>
+      <span>l</span>
+      <span>c</span>
+      <span>o</span>
+      <span>m</span>
+      <span>e</span>
+    </div>
+    <div class="word">
+      <span>t</span>
+      <span>o</span>
+    </div>
+    <div class="word">
+      <span>m</span>
+      <span>y</span>
+    </div>
+    <div class="word">
+      <span>p</span>
+      <span>o</span>
+      <span>r</span>
+      <span>t</span>
+      <span>f</span>
+      <span>o</span>
+      <span>l</span>
+      <span>i</span>
+      <span>o</span>
     </div>
   </div>
+</div>
 
   <div id="map-container">
     <img src="/assets/portfolioroom.png" alt="Mapa" id="map-image">
     <img src={Cama.src} alt="cama" class="map-object" id="cama" />
-    <img src={Pc.src} alt="pc" class="map-object" id="pc" />
+    <PcComponent client:load/>
 
     <Character />
   </div>
