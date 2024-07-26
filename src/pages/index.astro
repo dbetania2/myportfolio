@@ -1,7 +1,8 @@
 ---
 import Character from '../components/character/Character.astro'; // Ruta al componente 
 import Cama from '../objetos-img/cama.png';
-import PcComponent from '../components/pcComponent/PcComponent'; // Importa el componente React
+import PcComponent from '../components/pcComponent/PcComponent.jsx'; // Importa el componente React
+import { Link } from 'react-router-dom'; // Importa Link para el enrutamiento
 ---
 
 <!DOCTYPE html>
@@ -53,6 +54,8 @@ import PcComponent from '../components/pcComponent/PcComponent'; // Importa el c
 
     <Character />
   </div>
+
+  <script type="module" src="/src/main.jsx"></script>
 </body>
 </html>
 
