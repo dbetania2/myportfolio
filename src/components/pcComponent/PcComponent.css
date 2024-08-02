@@ -1,44 +1,51 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-.map-object {
-    cursor: pointer;
-    position: absolute; /* Permite posicionar los objetos dentro del mapa */
-    width: 35%;
-    image-rendering: pixelated; /* Mantiene la nitidez de los píxeles al hacer zoom */
-  }
-  
-  #pc {
-    top: 270px;
-    left: 450px;
-  }
-  
-  .screen-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro semi-transparente */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000; /*encima de otros elementos */
-  }
+/* PcComponent.css */
 
-  
-  .close-button {
-    background-color: #dbab27;
-    color: #e1e7e1;
-    border: 2px solid #e4ece4;
-    padding: 5px 10px;
-    cursor: pointer;
-    font-family: 'Press Start 2P', cursive; /* Fuente retro */
-    margin-top: 20px;
-  }
-  
-  .close-button:hover {
-    background-color: #e4f1e4;
-    color: #b1945e;
-  }
+/* Asegúrate de que la pantalla esté oculta por defecto y solo se muestra cuando showScreen es true */
+.screen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro semi-transparente */
+  display: none; /* Ocultado por defecto */
+  align-items: center; /* Centra verticalmente */
+  justify-content: center; /* Centra horizontalmente */
+  z-index: 1000; /* Encima de otros elementos */
+}
+
+
+.close-button {
+  background-color: #dbab27;
+  color: #e1e7e1;
+  border: 2px solid #e4ece4;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-family: 'Press Start 2P', cursive; /* Fuente retro */
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.close-button:hover {
+  background-color: #e4f1e4;
+  color: #b1945e;
+}
+
+/* Asegúrate de que el pc componente tenga los estilos correctos */
+.map-object {
+  cursor: pointer;
+  position: absolute;
+  width: 35%;
+  image-rendering: pixelated; /* Mantiene la nitidez de los píxeles al hacer zoom */
+}
+
+#pc {
+  top: 270px;
+  left: 450px;
+}
+
   
   

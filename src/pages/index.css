@@ -108,9 +108,13 @@ body {
 }
 
 .map-object {
-  position: absolute; /* Permite posicionar los objetos dentro del mapa */
-  width: 35%;
- 
+  
+    position: absolute;
+    width: 35%;
+    image-rendering: pixelated;
+    z-index: 10; /* Asegúrate de que esté en el frente */
+  
+  
   image-rendering: pixelated; /* Mantiene la nitidez de los píxeles al hacer zoom */
 }
 

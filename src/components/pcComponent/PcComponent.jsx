@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './PcComponent.css';
-import PcScreen from '../../pages/PcScreen/PcScreen.jsx';  // Importa la nueva página para la PC
+import PcScreen from '../PcScreen/PcScreen.jsx';
 
 const PcComponent = () => {
   const [showScreen, setShowScreen] = useState(false);
@@ -16,16 +16,19 @@ const PcComponent = () => {
   return (
     <>
       <img 
-        src="src/objetos-img/pc.png" // Ajusta la ruta de la imagen 
+        src="/src/objetos-img/pc.png" 
         alt="pc" 
         className="map-object" 
         id="pc" 
         onClick={handlePcClick} 
+        
       />
       {showScreen && (
-        <div className="screen-overlay" onClick={handleCloseScreen}>
-          <PcScreen /> {/* Muestra el contenido de la pantalla */}
-          <button className="close-button" onClick={handleCloseScreen}>Cerrar</button>
+        <div className={`screen-overlay ${showScreen ? 'show' : ''}`} onClick={handleCloseScreen}>
+          <div className="screen-content" onClick={(e) => e.stopPropagation()}>
+            <PcScreen /> 
+            <button className="close-button" onClick={handleCloseScreen}>Cerrar</button>
+          </div>
         </div>
       )}
     </>
@@ -33,6 +36,9 @@ const PcComponent = () => {
 };
 
 export default PcComponent;
+
+
+
 
 
 

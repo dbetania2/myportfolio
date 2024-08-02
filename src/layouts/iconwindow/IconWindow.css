@@ -1,0 +1,68 @@
+/* src/components/iconWindow/IconWindow.css */
+
+.iconwindow-overlay {
+  display: none; /* Oculto por defecto */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* Asegúrate de que la ventana esté sobre otros elementos */
+  background: rgba(0, 0, 0, 0.5); /* Fondo semitransparente para el overlay */
+}
+
+.iconwindow-overlay.show {
+  display: flex; /* Mostrar cuando tenga la clase 'show' */
+}
+
+.iconwindow-content {
+  background: #f595ba; /* Fondo rosa para la ventana */
+  border-radius: 8px;
+  position: relative;
+  width: 50%; /* Ancho fijo */
+  height: 450px; /* Altura fija */
+  max-width: 90%; /* Asegura que la ventana no exceda el ancho de la pantalla */
+  overflow: hidden; /* Oculta el contenido que excede el tamaño fijo */
+  border: 4px solid #b6436f; /* Borde para estilo pixel art */
+  box-shadow: 0 0 0 4px #330825; /* Sombra para estilo pixel art */
+  image-rendering: pixelated; /* Asegura estilo pixel art */
+}
+
+.iconwindow-content.show {
+  display: block; /* Mostrar cuando tenga la clase 'show' */
+}
+
+
+.iconwindow-header {
+  background: #f06292; /* Rosa para la barra de la pestaña */
+  color: #ffffff;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.iconwindow-title {
+  font-family: 'Press Start 2P', cursive; /* Fuente pixel art */
+  font-size: 18px;
+  margin: 0;
+}
+
+.iconwindow-close-button {
+  background: transparent;
+  border: none;
+  color: #cebec6;
+  font-size: 18px;
+  cursor: pointer;
+  font-family: 'Press Start 2P', cursive; /* Fuente pixel art */
+}
+
+.iconwindow-body {
+  padding: 10px; /* Añadir padding para el contenido */
+  overflow: auto; /* Permite desplazamiento si el contenido excede el tamaño */
+  height: calc(100% - 40px); /* Ajusta el alto restante después de la barra superior */
+  display: flex;
+  flex-direction: column; /* Ajusta el contenido verticalmente */
+}

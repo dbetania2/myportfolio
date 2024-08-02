@@ -1,0 +1,31 @@
+---
+const { title, onClose } = Astro.props;
+import '../iconwindow/IconWindow.css';
+---
+
+<div class="iconwindow-overlay">
+  <div class="iconwindow-content">
+    <div class="iconwindow-header">
+      <div class="iconwindow-title">{title}</div>
+      <button class="iconwindow-close-button" id="closeIconWindow">X</button>
+    </div>
+    <div class="iconwindow-body">
+      <slot /> {/* Aquí se inserta el contenido dinámico */}
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

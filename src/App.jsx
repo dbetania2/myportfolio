@@ -1,18 +1,25 @@
+
 // src/App.jsx
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './pages/index.astro';
-import PcScreen from './pages/PcScreen/PcScreen.jsx'; // Importa la nueva página para la PC
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import PcScreen from './components/PcScreen/PcScreen.jsx'; 
+import AboutMe from './pages/aboutme/aboutMe.astro';
+import Projects from './pages/projects/projects.astro';
+import Contact from './pages/contact/contact.astro';
+import PcComponent from './components/pcComponent/PcComponent.jsx';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/pc" element={<PcScreen />} /> {/* Ruta para la pantalla de la PC */}
+        <Route path="/" element={<PcComponent />} />
+        <Route path="/pc" element={<PcScreen />} />
+        
       </Routes>
     </Router>
   );
 }
 
 export default App;
+
+
