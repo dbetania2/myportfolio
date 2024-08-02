@@ -1,7 +1,11 @@
 ---
-import Character from '../components/character/Character.astro'; // Ruta al componente 
+import Character from '../components/character/Character.astro';
 import Cama from '../objetos-img/cama.png';
-import Pc from '../objetos-img/pc.png';
+import PcComponent from '../components/pcComponent/PcComponent.jsx';
+import AboutMe from './aboutme/aboutMe.astro';
+import Contact from './contact/contact.astro';
+import Projects from './projects/projects.astro';
+import IconWindow from '../layouts/iconwindow/IconWindow.astro';
 ---
 
 <!DOCTYPE html>
@@ -9,21 +13,58 @@ import Pc from '../objetos-img/pc.png';
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mapa PNG</title>
+  <title>Mi Portfolio</title>
   <link rel="stylesheet" href="/src/pages/index.css">
 </head>
 <body>
+  <div id="welcome-screen">
+    <div id="welcome-text">
+      <div class="word">
+        <span>W</span><span>e</span><span>l</span><span>c</span><span>o</span><span>m</span><span>e</span>
+      </div>
+      <div class="word">
+        <span>t</span><span>o</span>
+      </div>
+      <div class="word">
+        <span>m</span><span>y</span>
+      </div>
+      <div class="word">
+        <span>p</span><span>o</span><span>r</span><span>t</span><span>f</span><span>o</span><span>l</span><span>i</span><span>o</span>
+      </div>
+    </div>
+  </div>
+
   <div id="map-container">
     <img src="/assets/portfolioroom.png" alt="Mapa" id="map-image">
     <img src={Cama.src} alt="cama" class="map-object" id="cama" />
-    <img src={Pc.src} alt="pc" class="map-object" id="pc" />
+    <PcComponent client:load/>
+    
+    <!-- Contenedor root para React -->
+    <div id="root"></div>
 
     <Character />
   </div>
+
+  <!-- Layout de IconWindow con visibilidad controlada por el script -->
+  <IconWindow id="iconWindowContainer"> <!-- id para seleccionarlo fácilmente -->
+    <div id="aboutMeWindow" style="display: none;">
+      <AboutMe />
+    </div>
+
+    <div id="projectsWindow" style="display: none;">
+      <Projects />
+    </div>
+
+    <div id="contactWindow" style="display: none;">
+      <Contact />
+    </div>
+  </IconWindow>
+
+  <!-- Script para manejar el componente React -->
+  <script type="module" src="src/main.jsx"></script>
+
 </body>
 </html>
-
-
 
 
 

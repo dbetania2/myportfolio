@@ -1,0 +1,133 @@
+/* pcComponent.css */
+
+/* Asegúrate de que la pantalla esté oculta por defecto y solo se muestra cuando showScreen es true */
+.screen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro semi-transparente */
+  display: none; /* Ocultado por defecto */
+  align-items: center; /* Centra verticalmente */
+  justify-content: center; /* Centra horizontalmente */
+  z-index: 1000; /* Encima de otros elementos */
+}
+
+/* Clase para mostrar la pantalla */
+.screen-overlay.show {
+  display: flex; /* Muestra cuando está activo */
+}
+
+/* Estilos para el contenido de la pantalla */
+.pc-screen-content {
+  position: relative;
+  background-color: #e6a4d2; /* Fondo oscuro para la pantalla */
+  border-left: 50px solid #dad4ba; /* Borde gris para los lados */
+  border-right: 50px solid #dad4ba; /* Borde gris para los lados */
+  border-top: 60px solid #dad4ba; /* Borde gris más alto para la parte superior */
+  border-bottom: 60px solid #dad4ba; /* Borde gris más alto para la parte inferior */
+  border-radius: 5px;
+  width: 1000px; /* Ajusta el ancho si es necesario */
+  height: 600px; /* Ajusta la altura */
+  max-height: 95%; /* Altura máxima para evitar que se salga de la pantalla */
+  min-height: 400px; /* Ajusta según el contenido para evitar ventanas demasiado pequeñas */
+  overflow-y: auto; /* Permite el desplazamiento si el contenido excede la altura */
+  font-family: 'Press Start 2P', cursive; /* Fuente retro */
+  color: #ffffff; /* Color del texto */
+  text-align: center;
+  box-shadow: 0 0 10px #e2db7b; /* Sombra de neón */
+  image-rendering: pixelated; /* Para imágenes dentro de la pantalla */
+  
+  background-image:
+    linear-gradient(#dfa9df 1px, transparent 1px),
+    linear-gradient(90deg, #dfa9df 1px, transparent 1px);
+  background-size: 10px 10px; /* Tamaño de las celdas de la cuadrícula */
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.screen-content-inner {
+  background: #f595ba; /* Fondo rosa para la ventana */
+  border-radius: 8px;
+  width: 80%; /* Ajusta el ancho del contenido interno */
+  max-width: 90%; /* Asegura que la ventana no exceda el ancho de la pantalla */
+  height: 80%; /* Ajusta la altura del contenido interno */
+  overflow: hidden; /* Oculta el contenido que excede el tamaño fijo */
+  border: 4px solid #b6436f; /* Borde para estilo pixel art */
+  box-shadow: 0 0 0 4px #330825; /* Sombra para estilo pixel art */
+  display: flex;
+  flex-direction: column;
+}
+
+.close-button {
+  align-self: flex-end;
+  background: transparent;
+  border: none;
+  color: #cebec6;
+  font-size: 18px;
+  cursor: pointer;
+  font-family: 'Press Start 2P', cursive; /* Fuente pixel art */
+  margin: 10px;
+}
+
+.power-button {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+  background-color: #32cd32; /* Color verde para el botón */
+  border-radius: 50%;
+}
+
+.screen-icon {
+  cursor: pointer;
+  width: 64px; /* Ajusta el tamaño del ícono en pixel art */
+  height: 64px; /* Mantiene el tamaño cuadrado */
+  margin: 20px;
+  image-rendering: pixelated; /* Asegura que el ícono se muestre en estilo pixel art */
+}
+
+.screen-icon:hover {
+  opacity: 0.8; /* Cambia el estilo al pasar el mouse sobre el ícono */
+}
+
+/* Barra de Inicio */
+.taskbar {
+  position: absolute;
+  display: flex;
+  background-color: #5c2f68;
+  color: #fff;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  box-sizing: border-box;
+  font-size: 12px;
+  width: 100%; /* Asegura que la barra ocupe todo el ancho del contenedor */
+  bottom: 0; /* Coloca la barra en la parte inferior */
+  left: 0;
+}
+
+.taskbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.start-button {
+  background-color: #673172;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 12px;
+}
+
+.taskbar-clock {
+  margin-right: 10px;
+}
+

@@ -1,3 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/*Animación inicio*/
+#welcome-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeOutScreen 2s forwards;
+  animation-delay: 3s; /* Ajusta el tiempo de la animación según sea necesario */
+}
+
+#welcome-text {
+  font-family: 'Press Start 2P', cursive; /* Usa la fuente de Google Fonts */
+  font-size: 3rem;
+  color: rgb(240, 120, 204);
+  display: flex;
+  
+  justify-content: space-between;
+}
+
+.word {
+  display: flex;
+  padding: 1rem; /* Espaciado entre palabras */
+
+}
+
+.word span {
+  opacity: 0;
+  animation: fadeIn 0.5s forwards;
+  margin: 0.2rem; /* Espacio entre letras dentro de la palabra */
+}
+
+
+
+/* Animación de letras */
+.word:nth-child(1) span:nth-child(1) { animation-delay: 0s; }
+.word:nth-child(1) span:nth-child(2) { animation-delay: 0.1s; }
+.word:nth-child(1) span:nth-child(3) { animation-delay: 0.2s; }
+.word:nth-child(1) span:nth-child(4) { animation-delay: 0.3s; }
+.word:nth-child(1) span:nth-child(5) { animation-delay: 0.4s; }
+.word:nth-child(1) span:nth-child(6) { animation-delay: 0.5s; }
+.word:nth-child(1) span:nth-child(7) { animation-delay: 0.6s; }
+.word:nth-child(2) span:nth-child(1) { animation-delay: 0.7s; }
+.word:nth-child(2) span:nth-child(2) { animation-delay: 0.8s; }
+.word:nth-child(3) span:nth-child(1) { animation-delay: 0.9s; }
+.word:nth-child(3) span:nth-child(2) { animation-delay: 1s; }
+.word:nth-child(4) span:nth-child(1) { animation-delay: 1.1s; }
+.word:nth-child(4) span:nth-child(2) { animation-delay: 1.2s; }
+.word:nth-child(4) span:nth-child(3) { animation-delay: 1.3s; }
+.word:nth-child(4) span:nth-child(4) { animation-delay: 1.4s; }
+.word:nth-child(4) span:nth-child(5) { animation-delay: 1.5s; }
+.word:nth-child(4) span:nth-child(6) { animation-delay: 1.6s; }
+.word:nth-child(4) span:nth-child(7) { animation-delay: 1.7s; }
+.word:nth-child(4) span:nth-child(8) { animation-delay: 1.8s; }
+.word:nth-child(4) span:nth-child(9) { animation-delay: 1.9s; }
+
+/* Animaciones para desvanecer el texto y la pantalla */
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOutScreen {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    display: none;
+  }
+}
+/*------------------------------------------------------------------------*/
+
 /* index.css */
 body {
   margin: 0;
@@ -27,9 +108,13 @@ body {
 }
 
 .map-object {
-  position: absolute; /* Permite posicionar los objetos dentro del mapa */
-  width: 35%;
- 
+  
+    position: absolute;
+    width: 35%;
+    image-rendering: pixelated;
+    z-index: 10; /* Asegúrate de que esté en el frente */
+  
+  
   image-rendering: pixelated; /* Mantiene la nitidez de los píxeles al hacer zoom */
 }
 
@@ -39,8 +124,4 @@ body {
   left: 35px;
 }
 
-#pc {
-  top: 270px;
-  left: 450px;
-}
 
