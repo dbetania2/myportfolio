@@ -1,90 +1,45 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
+// importar la funcion para iniciar el movimiento del personaje
+import { initCharacterMovement } from './components/character/character-behavior.js';
+// importar la funcion para gestionar las interacciones
+import { initInteractionManager } from './components/character/interaction-manager.js';
+// importar la funcion para inicializar el sistema de colisiones
+import { initCollisionSystem } from './lib/collision/manager.js';
 
-// Inicializa la aplicación React en el elemento root
-const rootElement = document.getElementById('root');
-if (rootElement) {
-  // Usa ReactDOM para crear un root y renderiza el componente App dentro de él
-  ReactDOM.createRoot(rootElement).render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  );
-} else {
-  // Si no se encuentra el elemento root, muestra un error en la consola
-  console.error("No se encontró el elemento root para montar la aplicación React.");
-}
-
-// Función para mostrar u ocultar ventanas
-const toggleWindow = (id) => {
-  // Lista de IDs de ventanas que se deben controlar
-  const windows = ['aboutMeWindow', 'projectsWindow', 'contactWindow'];
-  let anyWindowVisible = false;
-
-  // Itera sobre cada ID de ventana
-  windows.forEach(windowId => {
-    // Busca el elemento de la ventana por ID
-    const el = document.getElementById(windowId);
-    if (el) {
-      // Muestra la ventana cuyo ID coincide y oculta las demás
-      el.style.display = windowId === id ? 'block' : 'none';
-      if (windowId === id) {
-        anyWindowVisible = true; // Marca que al menos una ventana está visible
-      }
+// esperar a que el documento este completamente cargado
+document.addEventListener('DOMContentLoaded', async () => {
+    // obtener el elemento contenedor del mapa
+    const mapContainer = document.getElementById('map-container');
+    if (!mapContainer) {
+        // registrar un error si el contenedor no existe
+        console.error("no encontrar el contenedor del mapa.");
+        return;
     }
-  });
 
-  // Busca el contenedor de la ventana de iconos
-  const iconWindowContainer = document.querySelector('.iconwindow-overlay');
-  if (iconWindowContainer) {
-    // Muestra u oculta el contenedor de la ventana de iconos según si alguna ventana está visible
-    iconWindowContainer.classList.toggle('show', anyWindowVisible);
-  }
-};
+    // inicializar el sistema de colisiones de forma asincrona
+    await initCollisionSystem(mapContainer);
 
-// Escuchar el evento personalizado
-window.addEventListener('toggleWindow', (event) => {
-  // Obtiene el ID de la ventana del evento
-  const windowId = event.detail;
-  // Llama a la función para mostrar u ocultar la ventana
-  toggleWindow(windowId);
-});
+    // inicializar el comportamiento de movimiento del personaje
+    initCharacterMovement(mapContainer);
+    // inicializar el gestor de interacciones
+    initInteractionManager(mapContainer);
 
-// Función para cerrar la ventana
-const closeIconWindow = () => {
-  // Busca el contenedor de la ventana de iconos
-  const iconWindowContainer = document.querySelector('.iconwindow-overlay');
-  if (iconWindowContainer) {
-    // Elimina la clase 'show' para ocultar la ventana de iconos
-    iconWindowContainer.classList.remove('show');
-  }
-
-  // Lista de IDs de ventanas que se deben ocultar
-  const windows = ['aboutMeWindow', 'projectsWindow', 'contactWindow'];
-  // Itera sobre cada ID de ventana
-  windows.forEach(windowId => {
-    // Busca el elemento de la ventana por ID
-    const el = document.getElementById(windowId);
-    if (el) {
-      // Oculta la ventana
-      el.style.display = 'none';
+    // obtener el boton para cerrar la ventana del icono
+    const closeButton = document.getElementById('closeIconWindow');
+    if (closeButton) {
+        // añadir un evento de click para cerrar la ventana
+        closeButton.addEventListener('click', closeIconWindow);
     }
-  });
-};
 
-// Agregar evento de clic al botón de cierre
-document.addEventListener('DOMContentLoaded', () => {
-  // Espera a que el DOM se cargue completamente
-  const closeButton = document.getElementById('closeIconWindow');
-  if (closeButton) {
-    // Agrega un manejador de clics al botón de cierre
-    closeButton.addEventListener('click', closeIconWindow);
-  }
+    // obtener la ruta actual de la ventana
+    const path = window.location.pathname;
+    // definir un objeto para mapear rutas a ventanas
+    const autoOpen = {
+        '/aboutme': 'aboutMeWindow',
+        '/projects': 'projectsWindow',
+        '/contact': 'contactWindow'
+    };
+    // verificar si la ruta coincide con una ventana para abrirla automaticamente
+    if (autoOpen[path]) {
+        toggleWindow(autoOpen[path]);
+    }
 });
-
-
-
-
-
-

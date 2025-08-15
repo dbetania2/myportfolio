@@ -1,54 +1,18 @@
 ---
-import './character.css'; // Importar el CSS del personaje
+import './character.css';
+
 ---
 
-<div id="map-container">
-  <div id="character" class="character idle"></div>
-</div>
 
-<!-- Código JavaScript -->
+<div id="character" class="character idle"></div>
+
 <script type="module" is:inline>
-  document.addEventListener('DOMContentLoaded', () => {
-    const character = document.getElementById('character');
-    const mapContainer = document.getElementById('map-container');
+    import { initCharacterMovement } from '/src/components/character/character-behavior.js';
 
-    if (!mapContainer) {
-      console.error('mapContainer no está definido');
-      return;
-    }
-
-    const handleClick = (e) => {
-      const rect = mapContainer.getBoundingClientRect();
-      const charWidth = character.offsetWidth;
-      const charHeight = character.offsetHeight;
-
-      const currentX = parseFloat(character.style.left) || 0;
-      const currentY = parseFloat(character.style.top) || 0;
-
-      let x = e.clientX - rect.left - charWidth / 2;
-      let y = e.clientY - rect.top - charHeight / 2;
-
-      x = Math.max(0, Math.min(x, rect.width - charWidth));
-      y = Math.max(0, Math.min(y, rect.height - charHeight));
-
-      let directionClass = 'idle';
-
-      if (Math.abs(x - currentX) > Math.abs(y - currentY)) {
-        directionClass = x > currentX ? 'walk-right' : 'walk-left';
-      } else {
-        directionClass = y > currentY ? 'walk-down' : 'walk-up';
-      }
-
-      character.className = `character ${directionClass}`;
-      character.style.left = `${x}px`;
-      character.style.top = `${y}px`;
-
-      setTimeout(() => {
-        character.className = 'character idle';
-      }, 500); // Ajusta este tiempo según la duración de tu animación
-    };
-
-    mapContainer.addEventListener('click', handleClick);
-  });
+    document.addEventListener('DOMContentLoaded', () => {
+  
+        const mapContainer = document.getElementById('map-container'); 
+        
+        initCharacterMovement(mapContainer);
+    });
 </script>
-
