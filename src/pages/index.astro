@@ -1,10 +1,9 @@
 ---
 import Character from '../components/character/Character.astro';
-import Cama from '../objetos-img/cama.png';
-import PcComponent from '../components/pcComponent/PcComponent.jsx';
-import AboutMe from './aboutme/aboutMe.astro';
-import Contact from './contact/contact.astro';
-import Projects from './projects/projects.astro';
+import WindowController from '../components/WindowController.jsx'; 
+import AboutMeComponent from '../components/aboutme/AboutMeComponent.astro';
+
+import Projects from './projects.astro';
 import IconWindow from '../layouts/iconwindow/IconWindow.astro';
 ---
 
@@ -36,9 +35,10 @@ import IconWindow from '../layouts/iconwindow/IconWindow.astro';
 
   <div id="map-container">
     <img src="/assets/portfolioroom.png" alt="Mapa" id="map-image">
-    <img src={Cama.src} alt="cama" class="map-object" id="cama" />
-    <PcComponent client:load/>
-    
+    <canvas id="gameCanvas"></canvas> 
+    <WindowController client:load />
+
+        <div id="root"></div>    
     <!-- Contenedor root para React -->
     <div id="root"></div>
 
@@ -46,22 +46,19 @@ import IconWindow from '../layouts/iconwindow/IconWindow.astro';
   </div>
 
   <!-- Layout de IconWindow con visibilidad controlada por el script -->
-  <IconWindow id="iconWindowContainer"> <!-- id para seleccionarlo fácilmente -->
+  <IconWindow id="iconWindowContainer"> <!-- id para seleccionarlo facilmente -->
     <div id="aboutMeWindow" style="display: none;">
-      <AboutMe />
+      <AboutMeComponent />
     </div>
 
     <div id="projectsWindow" style="display: none;">
       <Projects />
     </div>
 
-    <div id="contactWindow" style="display: none;">
-      <Contact />
-    </div>
   </IconWindow>
 
   <!-- Script para manejar el componente React -->
-  <script type="module" src="src/main.jsx"></script>
+  <script type="module" src="/src/main.jsx"></script>
 
 </body>
 </html>

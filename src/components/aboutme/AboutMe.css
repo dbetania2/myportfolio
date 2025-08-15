@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+p{
+    text-align: left;
+    font-size: 13px;
+    font-family: 'Press Start 2P', cursive; /* Usa la fuente de Google Fonts */
+}
+
+.about-me-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .about-me-upper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .about-me-text {
+    flex: 1;
+    margin-right: 20px;
+  }
+  
+  .about-me-photo img {
+    max-width: 200px;
+    border-radius: 50%;
+    
+  }
+  
+  .about-me-lower {
+    margin-top: 20px;
+  }
+  
