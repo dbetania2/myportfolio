@@ -1,5 +1,5 @@
 // src/lib/collision/config.js
-export const DEBUG_MODE = false;
+export const DEBUG_MODE = true;
 export const SCALE = 5;
 export const MAP_WIDTH = 960;
 export const MAP_HEIGHT = 540;
