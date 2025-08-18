@@ -1,6 +1,6 @@
 import * as SAT from 'sat';
 import { loadCollisionData } from './data-loader.js';
-import { renderDebugPolygons } from './debugger.js';
+import { renderDebugPolygons, drawCharacterHitbox as realDrawCharacterHitbox } from './debugger.js';
 import { DEBUG_MODE } from './config.js';
 import { getRenderParams } from './render-params.js';
 
@@ -56,4 +56,12 @@ export function getInteractedObject(charPolygon) {
     return null;
 }
 
-export { drawCharacterHitbox } from './debugger.js';
+/**
+ * Wrapper seguro de drawCharacterHitbox.
+ * Permite que character-behavior siga llamando a la función sin depender de DEBUG_MODE.
+ */
+export function drawCharacterHitbox(charPoly, mapContainer, renderParams) {
+    if (DEBUG_MODE) {
+        realDrawCharacterHitbox(charPoly, mapContainer, renderParams);
+    }
+}
