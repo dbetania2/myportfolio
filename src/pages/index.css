@@ -15,6 +15,15 @@
   animation: fadeOutScreen 2s forwards;
   animation-delay: 3s; /* Ajusta el tiempo de la animación según sea necesario */
 }
+#map-container svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Evita que interfiera con los clics */
+  z-index: 2; /* Por encima de todo */
+}
 
 #welcome-text {
   font-family: 'Press Start 2P', cursive; /* Usa la fuente de Google Fonts */
@@ -82,7 +91,7 @@
 /* index.css */
 body {
   margin: 0;
-  overflow: hidden; /* Opcional: oculta las barras de desplazamiento si no son necesarias */
+  overflow: hidden; /*  ocultar las barras de desplazamiento  */
   background-color: black;
   display: flex;
   justify-content: center;
@@ -105,6 +114,7 @@ body {
   object-fit: contain; /* Asegura que la imagen se ajuste sin distorsionarse */
   image-rendering: pixelated; /* Mantiene la nitidez de los píxeles al hacer zoom */
   position: absolute;
+ 
 }
 
 .map-object {
@@ -112,7 +122,7 @@ body {
     position: absolute;
     width: 35%;
     image-rendering: pixelated;
-    z-index: 10; /* Asegúrate de que esté en el frente */
+    z-index: 10; 
   
   
   image-rendering: pixelated; /* Mantiene la nitidez de los píxeles al hacer zoom */
