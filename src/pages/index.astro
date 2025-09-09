@@ -1,67 +1,64 @@
 ---
+import WindowController from '../components/WindowController.jsx';
 import Character from '../components/character/Character.astro';
-import WindowController from '../components/WindowController.jsx'; 
-import AboutMeComponent from '../components/aboutme/AboutMeComponent.astro';
 
-import Projects from './projects.astro';
-import IconWindow from '../layouts/iconwindow/IconWindow.astro';
+
+// variable para la url de la api de strapi
+const API_URL = import.meta.env.PUBLIC_STRAPI_API_URL;
+
+
+// se realizan peticiones a la api en paralelo para mejorar el rendimiento
+const [resAbout, resProjects] = await Promise.all([
+    fetch(`${API_URL}/about-me?populate=profile_picture,social_links`),
+    fetch(`${API_URL}/projects?populate=featured_image,tags`)
+]);
+
+
+// se maneja la respuesta de las peticiones de manera robusta
+const aboutData = resAbout.ok ? await resAbout.json() : { data: null };
+const projectsData = resProjects.ok ? await resProjects.json() : { data: [] };
+
+
+// se extraen los datos de las respuestas para ser pasados a los componentes
+const aboutMeData = aboutData.data;
+const projectsAllData = projectsData.data;
 ---
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mi Portfolio</title>
-  <link rel="stylesheet" href="/src/pages/index.css">
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Mi Portfolio</title>
+ <link rel="stylesheet" href="/src/styles/index.css">
 </head>
 <body>
-  <div id="welcome-screen">
-    <div id="welcome-text">
-      <div class="word">
-        <span>W</span><span>e</span><span>l</span><span>c</span><span>o</span><span>m</span><span>e</span>
-      </div>
-      <div class="word">
-        <span>t</span><span>o</span>
-      </div>
-      <div class="word">
-        <span>m</span><span>y</span>
-      </div>
-      <div class="word">
-        <span>p</span><span>o</span><span>r</span><span>t</span><span>f</span><span>o</span><span>l</span><span>i</span><span>o</span>
-      </div>
-    </div>
-  </div>
+ <div id="welcome-screen">
+   <div id="welcome-text">
+     <div class="word"><span>W</span><span>e</span><span>l</span><span>c</span><span>o</span><span>m</span><span>e</span></div>
+     <div class="word"><span>t</span><span>o</span></div>
+     <div class="word"><span>m</span><span>y</span></div>
+     <div class="word"><span>p</span><span>o</span><span>r</span><span>t</span><span>f</span><span>o</span><span>l</span><span>i</span><span>o</span></div>
+   </div>
+ </div>
 
-  <div id="map-container">
-    <img src="/assets/portfolioroom.png" alt="Mapa" id="map-image">
-    <canvas id="gameCanvas"></canvas> 
-    <WindowController client:load />
 
-        <div id="root"></div>    
-    <!-- Contenedor root para React -->
-    <div id="root"></div>
+ <div id="map-container">
+   <img src="/assets/portfolioroom.png" alt="Mapa" id="map-image">
+   <canvas id="gameCanvas"></canvas> 
 
-    <Character />
-  </div>
 
-  <!-- Layout de IconWindow con visibilidad controlada por el script -->
-  <IconWindow id="iconWindowContainer"> <!-- id para seleccionarlo facilmente -->
-    <div id="aboutMeWindow" style="display: none;">
-      <AboutMeComponent />
-    </div>
+ <WindowController
+ client:load
+ aboutMeData={aboutMeData}
+ />
 
-    <div id="projectsWindow" style="display: none;">
-      <Projects />
-    </div>
 
-  </IconWindow>
+ <div id="root"></div>
+ <Character />
+ </div>
 
-  <!-- Script para manejar el componente React -->
-  <script type="module" src="/src/main.jsx"></script>
 
+ <script type="module" src="/src/main.jsx"></script>
 </body>
 </html>
-
-
-

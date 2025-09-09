@@ -1,8 +1,13 @@
 ---
+// Importamos los componentes necesarios
 import Layout from '../layouts/Layout.astro';
-import ProjectsComponent from '../components/projects/ProjectsComponent.astro';
----
+import ProjectsComponent from '../components/sections/projects/ProjectsComponent.astro';
 
-<Layout title="My Projects">
-  <ProjectsComponent />
+// Obtenemos los datos de Strapi en el servidor para el SEO
+const API_URL = import.meta.env.PUBLIC_STRAPI_API_URL;
+const resProjects = await fetch(`${API_URL}/projects?populate=featured_image,tags`);
+const projectsData = resProjects.ok ? await resProjects.json() : { data: [] };
+---
+<Layout title="Proyectos">
+  <ProjectsComponent data={projectsData.data} />
 </Layout>

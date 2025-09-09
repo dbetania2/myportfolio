@@ -65,6 +65,4 @@ export function initInteractionManager(mapContainer) {
     
     mapContainerElement = mapContainer;
     mapContainerElement.addEventListener('click', handleClick, true);
-    
-    console.log("✅ Gestor de interacciones inicializado.");
 }
