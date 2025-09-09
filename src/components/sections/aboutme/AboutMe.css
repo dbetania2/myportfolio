@@ -1,0 +1,24 @@
+/*.about-me-content {
+    /* Hereda padding y max-width de section.css si usamos section-container 
+  }*/
+
+.about-me-upper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.about-me-text {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.about-me-photo img {
+    max-width: 200px;
+    border-radius: 50%;
+}
+
+.about-me-lower {
+    margin-top: 20px;
+}

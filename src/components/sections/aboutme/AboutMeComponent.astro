@@ -1,0 +1,70 @@
+---
+// src/components/sections/aboutme/AboutMeComponent.astro
+
+// define la estructura de datos que recibe el componente.
+interface SocialLink {
+    url: string;
+    platform: string;
+}
+
+interface AboutMeData {
+    profile_picture?: {
+        data?: {
+            attributes?: {
+                url: string;
+            };
+        };
+    };
+    name?: string;
+    about_me_text?: string;
+    social_links?: SocialLink[];
+}
+
+// extrae la propiedad 'data' que contiene la informacion de 'about me'.
+const { data } = Astro.props as { data: AboutMeData };
+
+// extrae los campos individuales de los datos para usarlos en el html.
+const profilePictureUrl = data?.profile_picture?.data?.attributes?.url;
+const name = data?.name;
+const aboutMeText = data?.about_me_text;
+const socialLinks = data?.social_links;
+---
+
+<div class="about-me-content">
+    {profilePictureUrl && (
+        <img 
+            src={profilePictureUrl} 
+            alt={`Foto de perfil de ${name || 'yo'}`} 
+            class="profile-picture"
+            width="200"
+            height="200"
+        />
+    )}
+    
+    {name && <h1>{name}</h1>}
+    
+    {aboutMeText && (
+        <div class="about-me-text">
+            {aboutMeText}
+        </div>
+    )}
+
+    {socialLinks && socialLinks.length > 0 && (
+        <div class="social-links-container">
+            <h2>Conectemos</h2>
+            <div class="social-links-grid">
+                {socialLinks.map((link) => (
+                    <a 
+                        href={link.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer nofollow" 
+                        class="social-link"
+                    >
+                        <span class="social-platform">{link.platform}</span>
+                        <span class="social-url">{new URL(link.url).hostname}</span>
+                    </a>
+                ))}
+            </div>
+        </div>
+    )}
+</div>
