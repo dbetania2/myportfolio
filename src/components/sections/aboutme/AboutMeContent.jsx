@@ -1,38 +1,63 @@
+// src/components/sections/aboutme/AboutMeContent.jsx
 import React from 'react';
-import './AboutMe.css'; // Asegúrate de que este archivo exista
+import './AboutMe.css';
+import { normalizeStrapiUrl } from '../../../utils/utils';
 
-// Este componente solo se encarga de mostrar el contenido
-// La ventana (IconWindow) se renderizará desde el componente padre, WindowController
+
 export default function AboutMeContent({ data }) {
   if (!data) return <p>No se pudo cargar la información</p>;
 
-  const { attributes } = data; // Strapi devuelve los datos dentro de "attributes"
+  const { attributes } = data;
   if (!attributes) return <p>Sin atributos</p>;
 
-  const { biography, profile_picture, contact_mail, SocialLink } = attributes;
+  // Campos según Strapi
+  const { name, biography, profile_picture, contact_mail, SocialLink, skills } = attributes;
 
-  const pictureUrl = profile_picture?.data?.attributes?.url;
+  const baseUrl = import.meta.env.PUBLIC_STRAPI_BASE_URL;
+
+ const pictureUrl = profile_picture?.data?.attributes?.url
+  ? normalizeStrapiUrl(baseUrl, profile_picture.data.attributes.url)
+  : null;
 
   return (
-    <div className="about-me-container">
-      {pictureUrl && (
-        <img src={pictureUrl} alt="Profile" className="profile-picture" />
+    <div className="about-me-page">
+      {/* Cabecera */}
+      <div className="about-me-header">
+        {pictureUrl && (
+          <img
+            src={pictureUrl}
+            alt={`Foto de perfil de ${name || 'yo'}`}
+            className="profile-picture"
+          />
+        )}
+        {name && <h1>{name}</h1>}
+      </div>
+
+      {/* Biografía */}
+      {biography && (
+        <div className="about-me-bio">
+          <h2>Sobre mí</h2>
+          <p>{biography}</p>
+        </div>
       )}
 
-      {biography && <p>{biography}</p>}
-
+      {/* Contacto */}
       {contact_mail && (
-        <p>
-          📧 <a href={`mailto:${contact_mail}`}>{contact_mail}</a>
-        </p>
+        <div className="about-me-contact">
+          <h2>Contacto</h2>
+          <p>
+            📧 <a href={`mailto:${contact_mail}`}>{contact_mail}</a>
+          </p>
+        </div>
       )}
 
-      {SocialLink && SocialLink.length > 0 && (
-        <div className="social-links">
-          <h3>Conéctate conmigo</h3>
+      {/* Redes Sociales */}
+      {SocialLink && SocialLink.length > 0 ? (
+        <div className="about-me-social">
+          <h2>Redes Sociales</h2>
           <ul>
-            {SocialLink.map((link, i) => (
-              <li key={i}>
+            {SocialLink.map((link) => (
+              <li key={link.id}>
                 <a href={link.platform_url} target="_blank" rel="noopener noreferrer">
                   {link.platform}
                 </a>
@@ -40,6 +65,22 @@ export default function AboutMeContent({ data }) {
             ))}
           </ul>
         </div>
+      ) : (
+        <p>No hay redes sociales disponibles</p>
+      )}
+
+      {/* Skills */}
+      {skills?.data?.length > 0 ? (
+        <div className="about-me-skills">
+          <h2>Skills</h2>
+          <ul>
+            {skills.data.map((skill) => (
+              <li key={skill.id}>{skill.attributes?.name}</li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <p>No hay skills disponibles</p>
       )}
     </div>
   );
