@@ -1,88 +1,108 @@
-// src/components/WindowController.jsx
-import React, { useState, useEffect } from 'react';
-import PcComponent from './pc/pcComponent/PcComponent.jsx';
-import AboutMeContent from './sections/aboutme/AboutMeContent.jsx';
-import IconWindow from '../layouts/iconwindow/IconWindow.jsx';
+import React, { useState, useEffect } from "react";
+import PcComponent from "./pc/pcComponent/PcComponent.jsx";
+import ProjectsContent from "./sections/projects/ProjectsContent.jsx";
+import IconWindow from "../layouts/iconwindow/IconWindow.jsx";
+import ProjectDetail from "./ProjectDetail.jsx"; 
+import AboutMeDetail from "./AboutMeDetail.jsx";
 
+export default function WindowController({ aboutMeData, projectsData }) {
+  const [activeInteraction, setActiveInteraction] = useState(null);
+  const [showPcScreen, setShowPcScreen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
 
-// controlador principal para el manejo de las ventanas y pantallas de la interfaz
-export default function WindowController({ aboutMeData }) {
- // estado para la interaccion activa: 'aboutme', 'projects', etc.
- const [activeInteraction, setActiveInteraction] = useState(null);
- // estado para mostrar la pantalla de la pc
- const [showPcScreen, setShowPcScreen] = useState(false);
+  const BASE_URL = import.meta.env.PUBLIC_STRAPI_BASE_URL;
 
+  // Logs iniciales
+  useEffect(() => {
+    console.log("AboutMeData recibido:", aboutMeData);
+    console.log("ProjectsData recibido:", projectsData);
+  }, [aboutMeData, projectsData]);
 
- // efecto que escucha el evento de interaccion para cambiar el estado
- useEffect(() => {
-   const handleInteraction = (event) => {
-     const { type } = event.detail;
-     // si la interaccion es con la pc, se muestra la pantalla de la pc
-     if (type === 'pc') {
-       setShowPcScreen(true);
-       setActiveInteraction(null);
-     } else {
-       // si es otra interaccion, se muestra la ventana correspondiente
-       setActiveInteraction(type);
-       setShowPcScreen(false);
-     }
-   };
+  useEffect(() => {
+    const handleInteraction = (event) => {
+      const { type } = event.detail;
+      console.log("Interacción detectada:", type);
+      if (type === "pc") {
+        setShowPcScreen(true);
+        setActiveInteraction(null);
+        setSelectedProject(null);
+      } else {
+        setActiveInteraction(type);
+        setShowPcScreen(false);
+        setSelectedProject(null);
+      }
+    };
+    document.addEventListener("object-interacted", handleInteraction);
+    return () =>
+      document.removeEventListener("object-interacted", handleInteraction);
+  }, []);
 
+  const closeWindow = () => {
+    console.log("Cerrando ventana general");
+    setActiveInteraction(null);
+    setSelectedProject(null);
+    setShowPcScreen(true);
+  };
 
-   // se agrega un oyente de eventos al montar el componente
-   document.addEventListener('object-interacted', handleInteraction);
-   // se remueve el oyente al desmontar para evitar fugas de memoria
-   return () => document.removeEventListener('object-interacted', handleInteraction);
- }, []);
+  const closePcScreen = () => {
+    console.log("Cerrando pantalla PC");
+    setShowPcScreen(false);
+    setActiveInteraction(null);
+    setSelectedProject(null);
+  };
 
+  const openProject = (project) => {
+    console.log("Proyecto seleccionado:", project);
+    setSelectedProject(project);
+  };
 
- // funcion para cerrar la ventana actual y volver a la pantalla de la pc
- const closeWindow = () => {
-   setActiveInteraction(null);
-   setShowPcScreen(true);
- };
+  const closeProjectDetail = () => {
+    console.log("Cerrando detalle de proyecto");
+    setSelectedProject(null);
+  };
 
+  // Mapa de ventanas para simplificar render
+  const windowMap = {
+    aboutme: (
+      <AboutMeDetail
+        data={aboutMeData}
+        baseUrl={BASE_URL}
+        onClose={closeWindow}
+      />
+    ),
+    projects: (
+      <IconWindow title="Proyectos" onClose={closeWindow}>
+        <ProjectsContent data={projectsData} onSelectProject={openProject} />
+      </IconWindow>
+    ),
+    // Podés agregar más ventanas aquí simplemente registrando otra key
+  };
 
- // funcion para cerrar la pantalla de la pc y volver al mapa principal
- const closePcScreen = () => {
-   setShowPcScreen(false);
-   setActiveInteraction(null);
- };
+  return (
+    <>
+      {/* Pantalla PC */}
+      {showPcScreen && (
+        <div className="screen-overlay" onClick={closePcScreen}>
+          <div
+            className="screen-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <PcComponent onNavigate={setActiveInteraction} />
+          </div>
+        </div>
+      )}
 
+      {/* Ventana activa */}
+      {!selectedProject && activeInteraction && windowMap[activeInteraction]}
 
- // funcion para renderizar el contenido de la ventana segun la interaccion activa
- const renderContent = () => {
-   switch (activeInteraction) {
-     case 'aboutme':
-       return <AboutMeContent data={aboutMeData} />;
-     default:
-       return null;
-   }
- };
-
-
- // renderizado condicional de los componentes de la interfaz
- return (
-   <>
-     {/* se muestra la pantalla de la pc si el estado es verdadero */}
-     {showPcScreen && (
-       <div className="screen-overlay" onClick={closePcScreen}>
-         <div className="screen-content" onClick={(e) => e.stopPropagation()}>
-           <PcComponent onNavigate={setActiveInteraction} />
-         </div>
-       </div>
-     )}
-
-
-     {/* se muestra la ventana de icono si hay una interaccion activa y no es la pc */}
-     {activeInteraction && activeInteraction !== 'pc' && (
-       <IconWindow
-         title={activeInteraction === 'aboutme' ? 'Sobre mí' : ''}
-         onClose={closeWindow}
-       >
-         {renderContent()}
-       </IconWindow>
-     )}
-   </>
- );
+      {/* Ventana de detalle de proyecto */}
+      {selectedProject && (
+        <ProjectDetail
+          project={selectedProject}
+          baseUrl={BASE_URL}
+          onClose={closeProjectDetail}
+        />
+      )}
+    </>
+  );
 }
