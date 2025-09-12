@@ -11,20 +11,15 @@ const PcScreen = ({ onNavigate }) => {
       name: 'aboutme', 
       alt: 'Información sobre mí', 
       src: '/src/objetos-img/archivospc/aboutme.png',
-      label: 'About Me'
+      label: 'AboutMe.lnk'
     },
     { 
       name: 'projects', 
       alt: 'Mis Proyectos', 
       src: '/src/objetos-img/archivospc/projects.png',
-      label: 'Projects'
+      label: 'Projects.lnk'
     },
-    { 
-      name: 'contact', 
-      alt: 'Contacto', 
-      src: '/src/objetos-img/archivospc/contact.png',
-      label: 'Contact'
-    },
+
   ];
 
   return (

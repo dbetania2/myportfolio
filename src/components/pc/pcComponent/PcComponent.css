@@ -1,8 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-/* PcComponent.css */
-
-/* Asegúrate de que la pantalla esté oculta por defecto y solo se muestra cuando showScreen es true */
+/* --- Overlay de la pantalla del PC --- */
 .screen-overlay {
   position: fixed;
   top: 0;
@@ -10,13 +7,13 @@
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro semi-transparente */
-  display: flex; /* Ocultado por defecto */
+  display: flex; /* visible solo si React monta el componente con showScreen */
   align-items: center; /* Centra verticalmente */
   justify-content: center; /* Centra horizontalmente */
   z-index: 1000; /* Encima de otros elementos */
 }
 
-
+/* --- Botón de cerrar --- */
 .close-button {
   background-color: #dbab27;
   color: #e1e7e1;
@@ -24,9 +21,11 @@
   padding: 5px 10px;
   cursor: pointer;
   font-family: 'Press Start 2P', cursive; /* Fuente retro */
+  font-size: 12px;
   position: absolute;
   top: 10px;
   right: 10px;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .close-button:hover {
@@ -34,18 +33,15 @@
   color: #b1945e;
 }
 
-/* Asegúrate de que el pc componente tenga los estilos correctos */
+/* --- Imagen del objeto PC en el mapa --- */
 .map-object {
   cursor: pointer;
   position: absolute;
   width: 35%;
-  image-rendering: pixelated; /* Mantiene la nitidez de los píxeles al hacer zoom */
+  image-rendering: pixelated; /* Mantiene la nitidez del pixel art */
 }
 
 #pc {
   top: 270px;
   left: 450px;
 }
-
-  
-  

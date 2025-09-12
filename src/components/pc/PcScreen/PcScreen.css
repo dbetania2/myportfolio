@@ -1,102 +1,88 @@
-/* pcComponent.css */
+/* PcScreen.css */
 
-/* Asegúrate de que la pantalla esté oculta por defecto y solo se muestra cuando showScreen es true */
-.screen-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro semi-transparente */
-  display: flex; /* Ocultado por defecto */
-  align-items: center; /* Centra verticalmente */
-  justify-content: center; /* Centra horizontalmente */
-  z-index: 1002; /* Encima de otros elementos */
+/* Aseguramos que esté encima de otros overlays si es necesario */
+.screen-overlay.pc-screen {
+  z-index: 1002;
 }
 
-/* Clase para mostrar la pantalla */
-.screen-overlay.show {
-  display: flex; /* Muestra cuando está activo */
-}
-
-/* Estilos para el contenido de la pantalla */
+/* Contenido de la pantalla */
 .pc-screen-content {
   position: relative;
-  background-color: #e6a4d2; /* Fondo oscuro para la pantalla */
-  border-left: 50px solid #dad4ba; /* Borde gris para los lados */
-  border-right: 50px solid #dad4ba; /* Borde gris para los lados */
-  border-top: 60px solid #dad4ba; /* Borde gris más alto para la parte superior */
-  border-bottom: 60px solid #dad4ba; /* Borde gris más alto para la parte inferior */
+  background-color: #e6a4d2;
+  border-left: 50px solid #dad4ba;
+  border-right: 50px solid #dad4ba;
+  border-top: 60px solid #dad4ba;
+  border-bottom: 60px solid #dad4ba;
   border-radius: 5px;
-  width: 1000px; /* Ajusta el ancho si es necesario */
-  height: 600px; /* Ajusta la altura */
-  max-height: 95%; /* Altura máxima para evitar que se salga de la pantalla */
-  min-height: 400px; /* Ajusta según el contenido para evitar ventanas demasiado pequeñas */
-  overflow-y: auto; /* Permite el desplazamiento si el contenido excede la altura */
-  font-family: 'Press Start 2P', cursive; /* Fuente retro */
-  color: #ffffff; /* Color del texto */
+  width: 1000px;
+  height: 600px;
+  max-height: 95%;
+  min-height: 400px;
+  overflow-y: auto;
   text-align: center;
-  box-shadow: 0 0 10px #e2db7b; /* Sombra de neón */
-  image-rendering: pixelated; /* Para imágenes dentro de la pantalla */
-  
+  box-shadow: 0 0 10px #e2db7b;
   background-image:
     linear-gradient(#dfa9df 1px, transparent 1px),
     linear-gradient(90deg, #dfa9df 1px, transparent 1px);
-  background-size: 10px 10px; /* Tamaño de las celdas de la cuadrícula */
-
+  background-size: 10px 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
+/* Ventana interna */
 .screen-content-inner {
-  background: #f595ba; /* Fondo rosa para la ventana */
+  background: #f595ba;
   border-radius: 8px;
-  width: 80%; /* Ajusta el ancho del contenido interno */
-  max-width: 90%; /* Asegura que la ventana no exceda el ancho de la pantalla */
-  height: 80%; /* Ajusta la altura del contenido interno */
-  overflow: hidden; /* Oculta el contenido que excede el tamaño fijo */
-  border: 4px solid #b6436f; /* Borde para estilo pixel art */
-  box-shadow: 0 0 0 4px #330825; /* Sombra para estilo pixel art */
+  width: 80%;
+  max-width: 90%;
+  height: 80%;
+  overflow: hidden;
+  border: 4px solid #b6436f;
+  box-shadow: 0 0 0 4px #330825;
   display: flex;
   flex-direction: column;
 }
 
-.close-button {
+/* Variante de botón de cierre en la pantalla */
+.close-button.screen {
   align-self: flex-end;
   background: transparent;
   border: none;
   color: #cebec6;
   font-size: 18px;
-  cursor: pointer;
-  font-family: 'Press Start 2P', cursive; /* Fuente pixel art */
   margin: 10px;
 }
 
+/* Botón de encendido */
 .power-button {
   position: absolute;
   bottom: 10px;
   right: 10px;
   width: 20px;
   height: 20px;
-  background-color: #32cd32; /* Color verde para el botón */
+  background-color: #32cd32;
   border-radius: 50%;
 }
 
+/* Iconos de escritorio */
 .screen-icon {
   cursor: pointer;
-  width: 64px; /* Ajusta el tamaño del ícono en pixel art */
-  height: 64px; /* Mantiene el tamaño cuadrado */
+  width: 64px;
+  height: 64px;
   margin: 20px;
-  image-rendering: pixelated; /* Asegura que el ícono se muestre en estilo pixel art */
+  background: transparent; /* asegura que no se rellene con color */
+  border: none; /* quita cualquier borde del navegador */
+
+
 }
 
 .screen-icon:hover {
-  opacity: 0.8; /* Cambia el estilo al pasar el mouse sobre el ícono */
+  opacity: 0.8;
 }
 
-/* Barra de Inicio */
+/* Taskbar estilo retro */
 .taskbar {
   position: absolute;
   display: flex;
@@ -107,8 +93,8 @@
   padding: 5px 10px;
   box-sizing: border-box;
   font-size: 12px;
-  width: 100%; /* Asegura que la barra ocupe todo el ancho del contenedor */
-  bottom: 0; /* Coloca la barra en la parte inferior */
+  width: 100%;
+  bottom: 0;
   left: 0;
 }
 
@@ -123,11 +109,9 @@
   border: none;
   padding: 5px 10px;
   cursor: pointer;
-  font-family: 'Press Start 2P', cursive;
   font-size: 12px;
 }
 
 .taskbar-clock {
   margin-right: 10px;
 }
-
