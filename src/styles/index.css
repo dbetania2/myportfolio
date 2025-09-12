@@ -1,6 +1,102 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-/*Animación inicio*/
+/* ------------------ GLOBAL ------------------ */
+body {
+  margin: 0;
+  overflow: hidden; /* Ocultar scroll */
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: 'Press Start 2P', cursive; /* Fuente global */
+  color: white;
+}
+
+/* Utilidad para pixel art */
+.pixelated {
+  image-rendering: pixelated;
+}
+
+/* ------------------ MAPA ------------------ */
+#map-container {
+  width: 800px;
+  height: 800px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#map-container svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+#map-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  position: absolute;
+}
+
+/* Objeto genérico en el mapa */
+.map-object {
+  position: absolute;
+  width: 35%;
+  image-rendering: pixelated;
+  z-index: 10;
+}
+
+/* Posicionamiento específico */
+#cama {
+  top: 320px;
+  left: 35px;
+}
+
+/* ------------------ PANTALLAS / OVERLAYS ------------------ */
+.screen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none; /* Oculto por defecto */
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+}
+
+.screen-overlay.show {
+  display: flex; /* Se activa cuando tiene .show */
+}
+
+/* Botón de cierre genérico */
+.close-button {
+  font-family: 'Press Start 2P', cursive;
+  cursor: pointer;
+  padding: 5px 10px;
+  border: none;
+}
+
+/* ------------------ ANIMACIONES ------------------ */
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+@keyframes fadeOutScreen {
+  from { opacity: 1; }
+  to { opacity: 0; display: none; }
+}
+
+/* ------------------ BIENVENIDA ------------------ */
 #welcome-screen {
   position: fixed;
   top: 0;
@@ -13,40 +109,53 @@
   align-items: center;
   z-index: 1000;
   animation: fadeOutScreen 2s forwards;
-  animation-delay: 3s; /* Ajusta el tiempo de la animación según sea necesario */
-}
-#map-container svg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none; /* Evita que interfiera con los clics */
-  z-index: 2; /* Por encima de todo */
+  animation-delay: 3s;
 }
 
 #welcome-text {
-  font-family: 'Press Start 2P', cursive; /* Usa la fuente de Google Fonts */
   font-size: 3rem;
   color: rgb(240, 120, 204);
   display: flex;
-  
   justify-content: space-between;
 }
 
 .word {
   display: flex;
-  padding: 1rem; /* Espaciado entre palabras */
-
+  padding: 1rem;
 }
 
 .word span {
   opacity: 0;
   animation: fadeIn 0.5s forwards;
-  margin: 0.2rem; /* Espacio entre letras dentro de la palabra */
+  margin: 0.2rem;
 }
 
 
+/* ------------------ aboutme------------------ */
+/* Imágenes de perfil en todo el sitio */
+.profile-picture {
+  border-radius: 50%;
+  border: 3px solid #dbab27;
+  image-rendering: pixelated; /* mantiene nitidez pixel art */
+}
+
+/* Enlaces */
+a {
+  text-decoration: none;
+  color: #dbab27;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: #e4f1e4;
+}
+
+/* Grillas reutilizables */
+.social-links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
 
 /* Animación de letras */
 .word:nth-child(1) span:nth-child(1) { animation-delay: 0s; }
@@ -69,67 +178,3 @@
 .word:nth-child(4) span:nth-child(7) { animation-delay: 1.7s; }
 .word:nth-child(4) span:nth-child(8) { animation-delay: 1.8s; }
 .word:nth-child(4) span:nth-child(9) { animation-delay: 1.9s; }
-
-/* Animaciones para desvanecer el texto y la pantalla */
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes fadeOutScreen {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-    display: none;
-  }
-}
-/*------------------------------------------------------------------------*/
-
-/* index.css */
-body {
-  margin: 0;
-  overflow: hidden; /*  ocultar las barras de desplazamiento  */
-  background-color: black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-#map-container {
-  width: 800px;
-  height: 800px;
-  position: relative; /* Permite posicionar objetos absolutos dentro del contenedor */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#map-image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain; /* Asegura que la imagen se ajuste sin distorsionarse */
-  image-rendering: pixelated; /* Mantiene la nitidez de los píxeles al hacer zoom */
-  position: absolute;
- 
-}
-
-.map-object {
-  
-    position: absolute;
-    width: 35%;
-    image-rendering: pixelated;
-    z-index: 10; 
-  
-  
-  image-rendering: pixelated; /* Mantiene la nitidez de los píxeles al hacer zoom */
-}
-
-/* Posicionamiento específico para cada objeto */
-#cama {
-  top: 320px;
-  left: 35px;
-}
