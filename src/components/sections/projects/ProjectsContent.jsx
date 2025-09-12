@@ -1,47 +1,52 @@
 import React from 'react';
-import './Projects.css'; // tu CSS para los proyectos
-import '../section.css'; // estilos generales para todas las secciones
-import IconWindow from '../../layouts/iconwindow/IconWindow.astro'; // Importa el marco de la ventana
+import './Projects.css';
 
-const ProjectsContent = ({ data, onClose }) => {
-  if (!data || data.length === 0) {
-    return (
-      <IconWindow client:only title="Error" onClose={onClose}>
-        <p>No projects available.</p>
-      </IconWindow>
-    );
-  }
+export default function ProjectsContent({ data, onSelectProject }) {
+  if (!data || data.length === 0) return <p>No hay proyectos disponibles</p>;
+
+  const baseUrl = import.meta.env.PUBLIC_STRAPI_BASE_URL;
 
   return (
-    <IconWindow client:only title="My Projects" onClose={onClose}>
-      <div className="section-container">
-        <div className="projects-list">
-          {data.map((project) => (
-            <div key={project.id} className="project-card">
-              {project.attributes.featured_image.data && (
+    <div className="projects-grid">
+      {data.map((project) => {
+        const { id, attributes } = project || {};
+        const { title, description, featured_image } = attributes || {};
+
+        const mainImageUrl = featured_image?.data?.attributes?.url
+          ? `${baseUrl.replace(/\/$/, '')}/${featured_image.data.attributes.url.replace(/^\//, '')}`
+          : null;
+
+        return (
+          <div key={id} className="project-card">
+            {/* Contenedor de imagen */}
+            {mainImageUrl && (
+              <div className="project-image-container">
                 <img
-                  src={project.attributes.featured_image.data.attributes.url}
-                  alt={project.attributes.title}
+                  src={mainImageUrl}
+                  alt={`Imagen de ${title}`}
                   className="project-image"
                 />
-              )}
-              <h4>{project.attributes.title}</h4>
-              <p dangerouslySetInnerHTML={{ __html: project.attributes.description }}></p>
-              {project.attributes.tags.data && project.attributes.tags.data.length > 0 && (
-                <div className="project-tags">
-                  {project.attributes.tags.data.map((tag) => (
-                    <span key={tag.id} className="project-tag">
-                      {tag.attributes.name}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    </IconWindow>
-  );
-};
+              </div>
+            )}
 
-export default ProjectsContent;
+            {/* Contenedor de texto */}
+            <div className="project-text-container">
+              {title && <h2>{title}</h2>}
+              {description && <p>{description}</p>}
+            </div>
+
+            {/* Contenedor del botón */}
+            <div className="project-button-container">
+              <button
+                className="view-project"
+                onClick={() => onSelectProject(project)}
+              >
+                Ver Proyecto
+              </button>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
