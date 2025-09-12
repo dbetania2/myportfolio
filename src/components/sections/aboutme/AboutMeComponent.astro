@@ -1,70 +1,123 @@
 ---
 // src/components/sections/aboutme/AboutMeComponent.astro
 
-// define la estructura de datos que recibe el componente.
 interface SocialLink {
-    url: string;
-    platform: string;
+  id: number;
+  platform: string;
+  platform_url: string;
+}
+
+interface Skill {
+  id: number;
+  attributes?: {
+    name: string;
+  };
 }
 
 interface AboutMeData {
-    profile_picture?: {
-        data?: {
-            attributes?: {
-                url: string;
-            };
-        };
+  profile_picture?: {
+    data?: {
+      attributes?: { url: string };
     };
-    name?: string;
-    about_me_text?: string;
-    social_links?: SocialLink[];
+  };
+  name?: string;
+  biography?: string;
+  contact_mail?: string;
+  SocialLink?: SocialLink[];
+  skills?: {
+    data: Skill[];
+  };
 }
 
-// extrae la propiedad 'data' que contiene la informacion de 'about me'.
-const { data } = Astro.props as { data: AboutMeData };
+// Props que vienen desde WindowController
+const { data } = Astro.props as { data: { attributes: AboutMeData } };
 
-// extrae los campos individuales de los datos para usarlos en el html.
-const profilePictureUrl = data?.profile_picture?.data?.attributes?.url;
-const name = data?.name;
-const aboutMeText = data?.about_me_text;
-const socialLinks = data?.social_links;
+// URL base de Strapi
+const baseUrl = import.meta.env.PUBLIC_STRAPI_BASE_URL;
+
+// Extraemos atributos
+const attributes = data?.attributes ?? {};
+const {
+  profile_picture,
+  name,
+  biography,
+  contact_mail,
+  SocialLink,
+  skills,
+} = attributes;
+
+// URL completa de la imagen de perfil
+const profilePictureUrl = profile_picture?.data?.attributes?.url
+  ? `${baseUrl}${profile_picture.data.attributes.url}`
+  : null;
+
+// Debug (opcional)
+console.log("AboutMeComponent.astro - attributes:", attributes);
 ---
-
-<div class="about-me-content">
+<div class="about-me-page">
+  <!-- Cabecera -->
+  <div class="about-me-header">
     {profilePictureUrl && (
-        <img 
-            src={profilePictureUrl} 
-            alt={`Foto de perfil de ${name || 'yo'}`} 
-            class="profile-picture"
-            width="200"
-            height="200"
-        />
+      <img
+        src={profilePictureUrl}
+        alt={`Foto de perfil de ${name || 'yo'}`}
+        class="profile-picture"
+        width="200"
+        height="200"
+      />
     )}
-    
-    {name && <h1>{name}</h1>}
-    
-    {aboutMeText && (
-        <div class="about-me-text">
-            {aboutMeText}
-        </div>
-    )}
+    {name && <h1 class="about-me-name">{name}</h1>}
+  </div>
 
-    {socialLinks && socialLinks.length > 0 && (
-        <div class="social-links-container">
-            <h2>Conectemos</h2>
-            <div class="social-links-grid">
-                {socialLinks.map((link) => (
-                    <a 
-                        href={link.url} 
-                        target="_blank" 
-                        rel="noopener noreferrer nofollow" 
-                        class="social-link"
-                    >
-                        <span class="social-platform">{link.platform}</span>
-                        <span class="social-url">{new URL(link.url).hostname}</span>
-                    </a>
-                ))}
-            </div>
-        </div>
-    )}
-</div>
+  <!-- Biografía -->
+  {biography && (
+    <div class="about-me-bio">
+      <h2>Sobre mí</h2>
+      <p>{biography}</p>
+    </div>
+  )}
+
+  <!-- Contacto -->
+  {contact_mail && (
+    <div class="about-me-contact">
+      <h2>Contacto</h2>
+      <p>📧 <a href={`mailto:${contact_mail}`}>{contact_mail}</a></p>
+    </div>
+  )}
+
+  <!-- Redes Sociales -->
+  {SocialLink && SocialLink.length > 0 ? (
+    <div class="about-me-social">
+      <h2>Redes Sociales</h2>
+      <div class="social-links-grid">
+        {SocialLink.map((link) => (
+          <a
+            href={link.platform_url}
+            target="_blank"
+            rel="noopener noreferrer nofollow"
+            class="social-link"
+          >
+            <span class="social-platform">{link.platform}</span>
+            <span class="social-url">{new URL(link.platform_url).hostname}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  ) : (
+    <p>No hay redes sociales disponibles</p>
+  )}
+
+  <!-- Skills -->
+  {Array.isArray(skills?.data) && skills.data.length > 0 ? (
+  <div class="about-me-skills">
+    <h2>Skills</h2>
+    <ul>
+      {skills.data.map((skill) => (
+        <li>{skill.attributes?.name}</li>
+      ))}
+    </ul>
+  </div>
+) : (
+  <p>No hay skills disponibles</p>
+)}
+

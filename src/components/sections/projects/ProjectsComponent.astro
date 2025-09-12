@@ -1,35 +1,13 @@
 ---
-const { data: projects } = Astro.props;
+// src/components/sections/projects/ProjectsComponent.astro
 
-import './Projects.css'; 
+import ProjectsContent from './ProjectsContent.jsx';
+
+const { data, onSelectProject } = Astro.props;
+
 ---
 
-<div class="projects-grid">
-  {projects.map((project: {
-    title: string;
-    description: string;
-    url: string;
-    featured_image: { data: { attributes: { url: string } } };
-    tags: { name: string }[];
-  }) => (
-    <article class="project-card">
-      <div class="project-image-container">
-        {project.featured_image && (
-          <img src={project.featured_image.data.attributes.url} alt={project.title} class="project-image" />
-        )}
-      </div>
-      <div class="project-info">
-        <h3>{project.title}</h3>
-        <p>{project.description}</p>
-        <div class="project-tags">
-          {project.tags.map((tag: { name: string }) => (
-            <span class="tag">{tag.name}</span>
-          ))}
-        </div>
-        <a href={project.url} target="_blank" rel="noopener noreferrer" class="project-link">
-          Ver Proyecto
-        </a>
-      </div>
-    </article>
-  ))}
+<div class="projects-page">
+  <h1>Proyectos</h1>
+  <ProjectsContent data={data} onSelectProject={onSelectProject} />
 </div>
