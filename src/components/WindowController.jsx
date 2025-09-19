@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import PcComponent from "./pc/pcComponent/PcComponent.jsx";
 import ProjectsContent from "./sections/projects/ProjectsContent.jsx";
 import IconWindow from "../layouts/iconwindow/IconWindow.jsx";
-import ProjectDetail from "./ProjectDetail.jsx"; 
-import AboutMeDetail from "./AboutMeDetail.jsx";
+import ProjectDetail from "./sections/projects/ProjectDetail.jsx"; 
+import AboutMeDetail from "./sections/aboutme/AboutMeDetail.jsx";
 
-export default function WindowController({ aboutMeData, projectsData }) {
+export default function WindowController({ aboutMeData, projectsData, sectionsData }) {
   const [activeInteraction, setActiveInteraction] = useState(null);
   const [showPcScreen, setShowPcScreen] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
@@ -16,8 +16,10 @@ export default function WindowController({ aboutMeData, projectsData }) {
   useEffect(() => {
     console.log("AboutMeData recibido:", aboutMeData);
     console.log("ProjectsData recibido:", projectsData);
-  }, [aboutMeData, projectsData]);
+    console.log("SectionsData recibido:", sectionsData);
+  }, [aboutMeData, projectsData, sectionsData]);
 
+  // Detecta interacciones con objetos
   useEffect(() => {
     const handleInteraction = (event) => {
       const { type } = event.detail;
@@ -72,7 +74,11 @@ export default function WindowController({ aboutMeData, projectsData }) {
     ),
     projects: (
       <IconWindow title="Proyectos" onClose={closeWindow}>
-        <ProjectsContent data={projectsData} onSelectProject={openProject} />
+        <ProjectsContent
+          projectsData={projectsData}
+          sections={sectionsData} // ✅ ahora pasamos las secciones
+          onSelectProject={openProject}
+        />
       </IconWindow>
     ),
     // Podés agregar más ventanas aquí simplemente registrando otra key
