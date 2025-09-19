@@ -1,3 +1,15 @@
+.project-tag-section {
+  margin-bottom: 2rem;
+}
+
+.project-tag-section h3 {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  color: #333;
+  border-bottom: 2px solid #b84387;
+  padding-bottom: 0.3rem;
+}
+
 /* Contenedor general de todos los proyectos */
 .projects-grid {
   display: flex;
@@ -8,51 +20,66 @@
   padding: 1rem;
   width: 95%;
   margin: 0 auto;
-  background-color: #f5f5f5;
+  background-color: transparent; /* Fondo transparente */
 }
 
 /* Cada tarjeta de proyecto */
 .project-card {
   display: flex;
   flex-direction: row;
-  align-items: center; /* Centra verticalmente */
+  align-items: center;
   gap: 1rem;
   padding: 1rem;
   border: 1px solid #ccc;
   border-radius: 8px;
-  background-color: #ffffff;
+  background-color: #ffffff; /* Solo el contenedor es blanco */
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  height: 180px; /* Altura fija */
+  min-height: 180px;
 }
 
 /* Contenedor de imagen */
 .project-image-container {
   flex-shrink: 0;
+  width: 300px; /* Imagen más ancha */
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Imagen del proyecto */
 .project-image {
-  width: 120px;
-  height: 120px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   border-radius: 6px;
 }
 
 /* Contenedor de texto */
 .project-text-container {
-  flex: 1; /* Ocupa todo el espacio disponible */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  
+  gap: 0.5rem; /* Espacio entre título y descripción */
 }
 
 .project-text-container h2 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.3rem;
+  margin: 0;
+  font-size: 1.1rem; /* Título un poco más chico */
   font-weight: bold;
   color: #333;
 }
 
 .project-text-container p {
   margin: 0;
-  font-size: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.4; /* Mejor legibilidad */
   color: #555;
+  text-align: justify; /* Justifica el texto */
+  line-height: 1.4;   /* Espaciado para mejorar lectura */
 }
 
 /* Contenedor del botón */
@@ -75,6 +102,7 @@
   background-color: #b84387;
 }
 
+
 /*Proyectos individuales*/
 /* Contenedor principal de detalle de proyecto */
 .project-detail-page {
@@ -92,7 +120,7 @@
 /* Imagen principal del proyecto */
 .project-main-image {
   width: 100%;
-  max-height: 400px;
+  max-height: 500px;
   object-fit: cover;
   border-radius: 8px;
   margin-bottom: 1rem;
