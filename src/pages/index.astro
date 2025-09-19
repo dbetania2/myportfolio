@@ -8,18 +8,17 @@ const API_URL = import.meta.env.PUBLIC_STRAPI_API_URL;
 
 
 // se realizan peticiones a la api en paralelo para mejorar el rendimiento
-const [resAbout, resProjects] = await Promise.all([
-  fetch(`${API_URL}/about-me?populate=profile_picture,SocialLink,skills`),
-  fetch(`${API_URL}/projects?populate=featured_image,tags,gallery`) 
+const [resAbout, resProjects, resSections] = await Promise.all([
+  fetch(`${API_URL}/about-me?populate=profile_picture,SocialLink,skills,biography_blocks,biography_blocks.image`),
+  fetch(`${API_URL}/projects?populate=featured_image,tags,gallery`),
+  fetch(`${API_URL}/project-sections?populate=tags`)
 ]);
-
-
-
-
 
 // se maneja la respuesta de las peticiones de manera robusta
 const aboutData = resAbout.ok ? await resAbout.json() : { data: null };
 const projectsData = resProjects.ok ? await resProjects.json() : { data: [] };
+const sectionsData = resSections.ok ? await resSections.json() : { data: [] };
+
 
 
 // se extraen los datos de las respuestas para ser pasados a los componentes
@@ -52,10 +51,11 @@ const projectsAllData = projectsData.data;
 
 
  <WindowController
-  client:load
-  aboutMeData={aboutMeData}
-  projectsData={projectsAllData}
-/>
+    client:load
+    aboutMeData={aboutMeData}
+    projectsData={projectsAllData}
+    sectionsData={sectionsData.data}
+  />
 
 
 
