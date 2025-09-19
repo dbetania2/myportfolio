@@ -1,147 +1,183 @@
-/* AboutMe.css */
-
 /* Contenedor principal */
 .about-me-page {
   max-width: 900px;
   margin: 0 auto;
   padding: 20px;
-  background: #fdf6f0; /* color suave de fondo */
+  background: linear-gradient(135deg, #fff, #ffe6f0);
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  font-family: 'Press Start 2P', cursive; /* estilo retro/pixel */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  font-family: 'Press Start 2P', cursive;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  position: relative;
 }
 
-/* Cabecera con foto + nombre */
-.about-me-header {
+/* BLOQUE SUPERIOR */
+.about-me-header-top {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 20px;
-  background: #f595ba; /* fondo rosa pixel */
-  padding: 15px;
-  border-radius: 8px;
-  border: 3px solid #b6436f;
-  box-shadow: inset 0 0 0 3px #330825;
+  flex-wrap: nowrap;
 }
 
-.profile-picture {
-  width: 150px;
-  height: 150px;
+/* Foto pixelada con hover */
+.profile-picture-top {
+  width: 30%;
+  max-width: 250px;
+  border-radius: 8px;
   object-fit: cover;
-  border-radius: 50%;
-  border: 3px solid #330825;
+}
+
+.pixel-hover {
   image-rendering: pixelated;
+  transition: all 0.6s ease;
+  filter: contrast(120%) saturate(90%) sepia(15%) hue-rotate(-15deg) brightness(1.05);
 }
 
+.pixel-hover:hover {
+  image-rendering: auto;
+  filter: none;
+}
+
+/* Contenedor de nombre y contacto */
+.about-me-header-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Nombre con efecto neón suave */
 .about-me-name {
-  font-size: 24px;
-  color: #330825;
+  font-size: 36px;
+  color: #e75480;
   margin: 0;
+  text-shadow: 0 0 4px #ff99bb, 0 0 8px #e75480;
+  animation: neon-flicker 6s infinite alternate;
 }
 
-/* Biografía */
-.about-me-bio {
-  background: #fce4ec;
-  padding: 15px;
-  border-radius: 8px;
-  border: 2px solid #f06292;
-  word-break: break-word; /* evita desbordes en textos largos */
+@keyframes neon-flicker {
+  0%, 90%, 100% { opacity: 1; text-shadow: 0 0 6px #ff99bb, 0 0 12px #e75480; }
+  92% { opacity: 0.6; text-shadow: none; }
+  95% { opacity: 0.8; text-shadow: 0 0 3px #ff99bb; }
 }
 
-.about-me-bio h2 {
-  margin-top: 0;
-  margin-bottom: 10px;
-  color: #b6436f;
-  font-size: 16px;
-}
-
-.about-me-bio p {
-  margin: 0;
-  color: #330825;
-}
-
-/* Contacto */
-.about-me-contact {
-  background: #e0f7fa;
-  padding: 15px;
-  border-radius: 8px;
-  border: 2px solid #26c6da;
-}
-
-.about-me-contact h2 {
-  margin-top: 0;
-  margin-bottom: 10px;
-  color: #007c91;
-  font-size: 16px;
-}
-
-.about-me-contact a {
-  color: #007c91;
-  text-decoration: none;
-}
-
-.about-me-contact a:hover {
-  text-decoration: underline;
-}
-
-/* Redes sociales */
-.about-me-social {
-  background: #fff3e0;
-  padding: 15px;
-  border-radius: 8px;
-  border: 2px solid #ffb74d;
-}
-
-.about-me-social h2 {
-  margin-top: 0;
-  margin-bottom: 10px;
-  color: #e65100;
-  font-size: 16px;
-}
-
-.social-links-grid {
+/* Contacto + redes */
+.contact-social {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 0.25rem;
+  font-size: 14px;
 }
 
-.social-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #ffe0b2;
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: 2px solid #ffb74d;
-  text-align: center;
-  min-width: 100px;
-  font-size: 12px; /* un poco más grande para legibilidad */
-  color: #e65100;
+.contact-social span {
+  color: #444;
+}
+
+.contact-social a {
+  color: #444;
   text-decoration: none;
-  image-rendering: pixelated;
-  word-break: break-word; /* permite que el texto largo no se corte */
+  position: relative;
 }
 
-.social-link:hover {
-  background: #ffcc80;
-  border-color: #ff9800;
+.contact-social a::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #e75480;
+  transition: width 0.3s ease;
 }
 
-/* Skills */
-.about-me-skills {
-  background: #e8f5e9;
+.contact-social a:hover::after {
+  width: 100%;
+}
+
+/* BIOGRAFÍA NUEVA (con posiciones) */
+.bio-block {
+  display: flex;
+  align-items: stretch;
+  margin: 1.5rem 0;
+  gap: 20px;
+}
+
+.bio-block p {
+  flex: 1;
+  display: block; /* cambiar de flex a block */
+  margin: 0;
+  color: #330825;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+
+/* Marco polaroid */
+.side-image {
+  background: #fff;
+  padding: 10px 10px 25px 10px;
+  border: 1px solid #ddd;
+  box-shadow: 2px 4px 10px rgba(0,0,0,0.2);
+  border-radius: 8px;
+  object-fit: cover;
+  max-width: 300px;
+  max-height: 250px;
+}
+
+/* Posiciones dinámicas */
+.position-left { flex-direction: row; }
+.position-right { flex-direction: row-reverse; }
+.position-top { flex-direction: column; text-align: center; }
+.position-bottom { flex-direction: column-reverse; text-align: center; }
+.position-none { flex-direction: column; }
+
+.position-left .side-image,
+.position-right .side-image {
+  width: 35%;
+}
+
+.position-top .side-image,
+.position-bottom .side-image {
+  width: 50%;
+  margin: 0 auto;
+}
+
+/* BIO contenedor */
+.about-me-bio {
   padding: 15px;
   border-radius: 8px;
-  border: 2px solid #66bb6a;
+  word-break: break-word;
+}
+
+/* Fade-in retro */
+.fade-in {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* SKILLS */
+.about-me-skills {
+  background: #fff0f5;
+  padding: 15px;
+  border-radius: 8px;
+  border: 2px solid #e75480;
 }
 
 .about-me-skills h2 {
   margin-top: 0;
   margin-bottom: 10px;
-  color: #2e7d32;
-  font-size: 16px;
+  color: #e75480;
+  font-size: 18px;
 }
 
 .about-me-skills ul {
@@ -153,12 +189,16 @@
 }
 
 .about-me-skills li {
-  background: #a5d6a7;
-  padding: 6px 10px;
+  background: #ffe6f0;
+  padding: 6px 12px;
   border-radius: 6px;
-  border: 2px solid #2e7d32;
-  font-size: 12px; /* más legible */
-  color: #1b5e20;
-  image-rendering: pixelated;
-  word-break: break-word; /* evita cortar nombres largos */
+  border: 2px solid #e75480;
+  font-size: 12px;
+  color: #330825;
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.about-me-skills li:hover {
+  transform: translateY(-3px) scale(1.05);
+  background: #ffcce0;
 }

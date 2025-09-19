@@ -14,19 +14,26 @@ interface Skill {
   };
 }
 
-interface AboutMeData {
-  profile_picture?: {
+interface BiographyBlock {
+  id: number;
+  text?: string;
+  image?: {
     data?: {
       attributes?: { url: string };
     };
   };
+  image_position?: "left" | "right";
+}
+
+interface AboutMeData {
+  profile_picture?: {
+    data?: { attributes?: { url: string } };
+  };
   name?: string;
-  biography?: string;
   contact_mail?: string;
   SocialLink?: SocialLink[];
-  skills?: {
-    data: Skill[];
-  };
+  skills?: { data: Skill[] };
+  biography_blocks?: BiographyBlock[];
 }
 
 // Props que vienen desde WindowController
@@ -37,24 +44,16 @@ const baseUrl = import.meta.env.PUBLIC_STRAPI_BASE_URL;
 
 // Extraemos atributos
 const attributes = data?.attributes ?? {};
-const {
-  profile_picture,
-  name,
-  biography,
-  contact_mail,
-  SocialLink,
-  skills,
-} = attributes;
+const { profile_picture, name, contact_mail, SocialLink, skills, biography_blocks } = attributes;
 
 // URL completa de la imagen de perfil
 const profilePictureUrl = profile_picture?.data?.attributes?.url
   ? `${baseUrl}${profile_picture.data.attributes.url}`
   : null;
-
-// Debug (opcional)
-console.log("AboutMeComponent.astro - attributes:", attributes);
 ---
+
 <div class="about-me-page">
+
   <!-- Cabecera -->
   <div class="about-me-header">
     {profilePictureUrl && (
@@ -69,13 +68,29 @@ console.log("AboutMeComponent.astro - attributes:", attributes);
     {name && <h1 class="about-me-name">{name}</h1>}
   </div>
 
-  <!-- Biografía -->
-  {biography && (
+  <!-- Biografía por bloques -->
+  {Array.isArray(biography_blocks) && biography_blocks.length > 0 ? (
     <div class="about-me-bio">
-      <h2>Sobre mí</h2>
-      <p>{biography}</p>
+      {biography_blocks.map((block) => {
+        const blockImgUrl = block.image?.data?.attributes?.url
+          ? `${baseUrl}${block.image.data.attributes.url}`
+          : null;
+
+        return (
+          <div class={`bio-block bio-${block.image_position || "left"}`}>
+            {blockImgUrl && (
+              <img
+                src={blockImgUrl}
+                alt="Imagen de biografía"
+                class="bio-block-image"
+              />
+            )}
+            {block.text && <p class="bio-block-text">{block.text}</p>}
+          </div>
+        );
+      })}
     </div>
-  )}
+  ) : null}
 
   <!-- Contacto -->
   {contact_mail && (
@@ -109,15 +124,16 @@ console.log("AboutMeComponent.astro - attributes:", attributes);
 
   <!-- Skills -->
   {Array.isArray(skills?.data) && skills.data.length > 0 ? (
-  <div class="about-me-skills">
-    <h2>Skills</h2>
-    <ul>
-      {skills.data.map((skill) => (
-        <li>{skill.attributes?.name}</li>
-      ))}
-    </ul>
-  </div>
-) : (
-  <p>No hay skills disponibles</p>
-)}
+    <div class="about-me-skills">
+      <h2>Skills</h2>
+      <ul>
+        {skills.data.map((skill) => (
+          <li>{skill.attributes?.name}</li>
+        ))}
+      </ul>
+    </div>
+  ) : (
+    <p>No hay skills disponibles</p>
+  )}
 
+</div>

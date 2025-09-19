@@ -33,14 +33,6 @@ export default function AboutMeContent({ data }) {
         {name && <h1>{name}</h1>}
       </div>
 
-      {/* Biografía */}
-      {biography && (
-        <div className="about-me-bio">
-          <h2>Sobre mí</h2>
-          <p>{biography}</p>
-        </div>
-      )}
-
       {/* Contacto */}
       {contact_mail && (
         <div className="about-me-contact">
@@ -67,6 +59,14 @@ export default function AboutMeContent({ data }) {
         </div>
       ) : (
         <p>No hay redes sociales disponibles</p>
+      )}
+
+      {/* Biografía */}
+      {biography && (
+        <div className="about-me-bio">
+          <h2>Sobre mí</h2>
+          <p>{biography}</p>
+        </div>
       )}
 
       {/* Skills */}
