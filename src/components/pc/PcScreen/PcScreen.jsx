@@ -11,14 +11,15 @@ const PcScreen = ({ onNavigate }) => {
       name: 'aboutme', 
       alt: 'Información sobre mí', 
       src: '/src/objetos-img/archivospc/aboutme.png',
-      label: 'AboutMe.lnk'
+      label: 'SobreMi.lnk'
     },
     { 
       name: 'projects', 
       alt: 'Mis Proyectos', 
-      src: '/src/objetos-img/archivospc/projects.png',
-      label: 'Projects.lnk'
+      src: '/src/objetos-img/archivospc/aboutme.png',//cambiar nombre del icono a general
+      label: 'Proyectos.lnk'
     },
+    
 
   ];
 
@@ -26,7 +27,7 @@ const PcScreen = ({ onNavigate }) => {
     // contenedor principal de la pantalla de escritorio
     <div className="pc-screen-content">
       {/* titulo del escritorio */}
-      <h2 style={{color: 'white', marginBottom: '20px'}}>Desktop</h2>
+      <h2 style={{color: 'white', marginBottom: '20px'}}>Daiana pc :D</h2>
       
       {/* contenedor de los iconos del escritorio */}
       <div style={{display: 'flex', gap: '30px', flexWrap: 'wrap'}}>
@@ -60,22 +61,6 @@ const PcScreen = ({ onNavigate }) => {
         ))}
       </div>
 
-      {/* boton de prueba para la navegacion */}
-      <button
-        onClick={() => {
-          if (onNavigate) onNavigate('aboutme');
-        }}
-        style={{
-          marginTop: '20px',
-          padding: '10px',
-          background: 'green',
-          color: 'white',
-          border: 'none',
-          borderRadius: '5px'
-        }}
-      >
-        TEST BUTTON (Sin imagen)
-      </button>
 
       {/* boton y barra de tareas */}
       <div className="power-button"></div>

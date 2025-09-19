@@ -59,7 +59,7 @@ function handleClick(event) {
  */
 export function initInteractionManager(mapContainer) {
     if (!mapContainer) {
-        console.error("❌ El contenedor del mapa no se encontró. No se puede inicializar el gestor de interacciones.");
+        console.error(" El contenedor del mapa no se encontró. No se puede inicializar el gestor de interacciones.");
         return;
     }
     
