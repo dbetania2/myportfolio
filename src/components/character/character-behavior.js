@@ -1,3 +1,4 @@
+//character-behavior.js
 import * as SAT from 'sat';
 import { initCollisionSystem, checkCollision, drawCharacterHitbox } from '../../lib/collision/manager.js';
 import { toIsometric, toCartesian } from '../../lib/collision/coords.js';

@@ -1,3 +1,4 @@
+/*manager.js*/ 
 import * as SAT from 'sat';
 import { loadCollisionData } from './data-loader.js';
 import { renderDebugPolygons, drawCharacterHitbox as realDrawCharacterHitbox } from './debugger.js';

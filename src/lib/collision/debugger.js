@@ -1,3 +1,4 @@
+/*debugger.js*/ 
 import { toIsometric } from './coords.js';
 import { DEBUG_MODE } from './config.js';
 

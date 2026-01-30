@@ -1,3 +1,4 @@
+//render-params.js
 import { SCALE, MAP_WIDTH, MAP_HEIGHT } from './config.js';
 
 export function getRenderParams() {

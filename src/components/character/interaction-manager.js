@@ -1,3 +1,4 @@
+//interaction-manager.js
 import * as SAT from 'sat';
 import { toCartesian } from '../../lib/collision/coords.js';
 import { SCALE, MAP_WIDTH, MAP_HEIGHT } from '../../lib/collision/config.js';
