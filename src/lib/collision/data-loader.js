@@ -1,70 +1,74 @@
 // src/lib/collision/data-loader.js
-
 import * as SAT from 'sat';
-import {
-  GLOBAL_COLLISION_OFFSET_X,
-  GLOBAL_COLLISION_OFFSET_Y
-} from './config.js';
 
 let obstacles = [];
 let interactables = [];
+let walkables = [];
 let loadingPromise = null;
 
 /**
- * Carga el archivo JSON de colisiones, lo procesa y devuelve los polígonos.
- * Esta función está diseñada para ser llamada una sola vez.
- * @returns {Promise<{obstacles: SAT.Polygon[], interactables: Array<{satShape: SAT.Polygon, type: string}>}>}
+ * Carga el archivo JSON de colisiones
+ * Se ejecuta UNA sola vez
  */
 export async function loadCollisionData() {
-  if (loadingPromise) {
-    return loadingPromise;
-  }
+  if (loadingPromise) return loadingPromise;
 
   loadingPromise = (async () => {
     try {
       const res = await fetch('/maps/nuevascolisiones.json');
       const data = await res.json();
 
+      obstacles = [];
+      interactables = [];
+      walkables = [];
+
+      // ---- INTERACTABLES ----
       const interactiveLayer = data.layers.find(l => l.name === 'InteractiveObjects');
       if (interactiveLayer?.objects) {
         for (const obj of interactiveLayer.objects) {
           if (!obj.polygon) continue;
-          const points = obj.polygon.map(p => new SAT.Vector(p.x, p.y));
-          const objectTypeProp = obj.properties?.find(p => p.name === 'type');
 
-          if (objectTypeProp?.value) {
+          const points = obj.polygon.map(p => new SAT.Vector(p.x, p.y));
+          const typeProp = obj.properties?.find(p => p.name === 'type');
+
+          if (typeProp?.value) {
             interactables.push({
               satShape: new SAT.Polygon(
-                new SAT.Vector(obj.x + GLOBAL_COLLISION_OFFSET_X, obj.y + GLOBAL_COLLISION_OFFSET_Y),
+                new SAT.Vector(obj.x, obj.y),
                 points
               ),
-              type: objectTypeProp.value
+              type: typeProp.value
             });
           }
         }
       }
 
+      // ---- WALKABLE AREAS (PISO) ----
       const walkableLayer = data.layers.find(l => l.name === 'WalkableAreas');
       if (walkableLayer?.objects) {
         for (const obj of walkableLayer.objects) {
           if (!obj.polygon) continue;
+
           const points = obj.polygon.map(p => new SAT.Vector(p.x, p.y));
-          obstacles.push({
+
+          walkables.push({
             satShape: new SAT.Polygon(
-              new SAT.Vector(obj.x + GLOBAL_COLLISION_OFFSET_X, obj.y + GLOBAL_COLLISION_OFFSET_Y),
+              new SAT.Vector(obj.x, obj.y),
               points
             )
           });
         }
       }
 
-      console.log('✅ Obstáculos cargados:', obstacles);
-      console.log('✅ Objetos interactivos cargados:', interactables);
+      console.log(`🟩 Walkables: ${walkables.length}`);
+      console.log(`🟥 Obstacles: ${obstacles.length}`);
+      console.log(`🟣 Interactables: ${interactables.length}`);
 
-      return { obstacles, interactables };
+      return { obstacles, interactables, walkables };
+
     } catch (err) {
       console.error('❌ Error al cargar colisiones:', err);
-      return { obstacles: [], interactables: [] };
+      return { obstacles: [], interactables: [], walkables: [] };
     }
   })();
 
