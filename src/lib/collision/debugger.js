@@ -1,4 +1,4 @@
-/*debugger.js*/ 
+// debugger.js
 import { toIsometric } from './coords.js';
 import { DEBUG_MODE } from './config.js';
 
@@ -17,15 +17,20 @@ function drawPolygons(polygons, color, strokeColor, renderParams) {
         const satPolygon = p.satShape;
         if (!satPolygon || !satPolygon.points) return;
 
-        const polygonElement = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+        const polygonElement = document.createElementNS(
+            'http://www.w3.org/2000/svg',
+            'polygon'
+        );
 
         const svgPoints = satPolygon.points.map(point => {
             const iso = toIsometric({
                 x: satPolygon.pos.x + point.x,
                 y: satPolygon.pos.y + point.y
             });
+
             const transformedX = (iso.x + horizontalIsoOffset) * scale;
             const transformedY = (iso.y + verticalIsoOffset) * scale;
+
             return `${transformedX},${transformedY}`;
         }).join(' ');
 
@@ -39,16 +44,29 @@ function drawPolygons(polygons, color, strokeColor, renderParams) {
 }
 
 /**
- * Renderiza los polígonos de depuración para obstáculos e interactivos.
+ * Renderiza los polígonos de depuración:
+ * - Obstáculos
+ * - Interactivos
+ * - Piso caminable
  */
-export function renderDebugPolygons(mapContainer, obstacles, interactables, renderParams) {
+export function renderDebugPolygons(
+    mapContainer,
+    obstacles,
+    interactables,
+    walkables,
+    renderParams
+) {
     if (!mapContainer || !DEBUG_MODE) return;
 
     if (debugSvgElement) {
         mapContainer.removeChild(debugSvgElement);
     }
 
-    debugSvgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    debugSvgElement = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'svg'
+    );
+
     debugSvgElement.style.position = 'absolute';
     debugSvgElement.style.left = '0';
     debugSvgElement.style.top = '0';
@@ -56,18 +74,40 @@ export function renderDebugPolygons(mapContainer, obstacles, interactables, rend
     debugSvgElement.style.height = '100%';
     debugSvgElement.style.pointerEvents = 'none';
     debugSvgElement.style.zIndex = '2';
+
     debugSvgElement.setAttribute('width', '100%');
     debugSvgElement.setAttribute('height', '100%');
     debugSvgElement.setAttribute('data-debug-type', 'polygons');
 
     mapContainer.appendChild(debugSvgElement);
 
-    drawPolygons(obstacles, 'rgba(0, 255, 255, 0.4)', 'blue', renderParams);
-    drawPolygons(interactables, 'rgba(255, 0, 255, 0.4)', 'purple', renderParams);
+    // 🟥 Obstáculos
+    drawPolygons(
+        obstacles,
+        'rgba(0, 255, 255, 0.4)',
+        'blue',
+        renderParams
+    );
+
+    // 🟣 Interactivos
+    drawPolygons(
+        interactables,
+        'rgba(255, 0, 255, 0.4)',
+        'purple',
+        renderParams
+    );
+
+    // 🟩 Piso caminable
+    drawPolygons(
+        walkables,
+        'rgba(0, 255, 0, 0.25)',
+        'green',
+        renderParams
+    );
 }
 
 /**
- * Dibuja la caja de colisión del personaje (pies) para depuración (caja roja).
+ * Dibuja la caja de colisión del personaje (pies) para depuración.
  */
 export function drawCharacterHitbox(charPoly, mapContainer, renderParams) {
     if (!mapContainer || !charPoly || !renderParams || !DEBUG_MODE) return;
@@ -76,7 +116,11 @@ export function drawCharacterHitbox(charPoly, mapContainer, renderParams) {
         mapContainer.removeChild(characterHitboxSvgElement);
     }
 
-    characterHitboxSvgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    characterHitboxSvgElement = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'svg'
+    );
+
     characterHitboxSvgElement.style.position = 'absolute';
     characterHitboxSvgElement.style.left = '0';
     characterHitboxSvgElement.style.top = '0';
@@ -84,6 +128,7 @@ export function drawCharacterHitbox(charPoly, mapContainer, renderParams) {
     characterHitboxSvgElement.style.height = '100%';
     characterHitboxSvgElement.style.pointerEvents = 'none';
     characterHitboxSvgElement.style.zIndex = '3';
+
     characterHitboxSvgElement.setAttribute('width', '100%');
     characterHitboxSvgElement.setAttribute('height', '100%');
     characterHitboxSvgElement.setAttribute('data-debug-type', 'character-hitbox');
@@ -92,15 +137,20 @@ export function drawCharacterHitbox(charPoly, mapContainer, renderParams) {
 
     const { scale, horizontalIsoOffset, verticalIsoOffset } = renderParams;
 
-    const polygonElement = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+    const polygonElement = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'polygon'
+    );
 
     const svgPoints = charPoly.points.map(p => {
         const iso = toIsometric({
             x: charPoly.pos.x + p.x,
             y: charPoly.pos.y + p.y
         });
+
         const transformedX = (iso.x + horizontalIsoOffset) * scale;
         const transformedY = (iso.y + verticalIsoOffset) * scale;
+
         return `${transformedX},${transformedY}`;
     }).join(' ');
 
