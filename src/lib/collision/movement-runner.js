@@ -1,4 +1,3 @@
-//movement-runner.js
 import { toIsometric } from './coords.js';
 import {
     GLOBAL_COLLISION_OFFSET_X,
@@ -7,51 +6,56 @@ import {
     CHAR_SPRITE_HEIGHT
 } from './config.js';
 
-// esta clase se encarga de ejecutar el bucle de movimiento visual de mi personaje, actualizando su posicion cuadro por cuadro y verificando colisiones en tiempo real
+// esta clase se encarga de ejecutar el bucle de movimiento visual del personaje
 export class MovementRunner {
     constructor(movementController) {
         this.movementController = movementController;
         this.isMoving = false;
-        // defino la velocidad, una velocidad mas baja hace que la animacion sea mas fluida
+        // velocidad del personaje
         this.speed = 0.6; 
     }
 
     move(character, startPos, targetPos, renderParams) {
-        // si ya me estoy moviendo ignoro la orden para evitar conflictos
+        // si ya se esta moviendo ignora la orden
         if (this.isMoving) return;
         this.isMoving = true;
 
         let currentPos = { ...startPos };
 
         const step = () => {
-            // calculo la distancia restante hacia mi objetivo
+            // calculo la distancia restante hacia el objetivo
             const dx = targetPos.x - currentPos.x;
             const dy = targetPos.y - currentPos.y;
 
             const dist = Math.hypot(dx, dy);
 
-            // si estoy lo suficientemente cerca del destino me detengo y pongo el estado de reposo
+            // si esta cerca del destino se detiene
             if (dist < this.speed) {
                 character.className = 'character idle';
                 this.isMoving = false;
                 return;
             }
 
-            // determino la direccion principal del movimiento para asignar la clase css correcta
+            // CORRECCION AQUI:
+            // convertimos el vector de movimiento (dx, dy) a isometrico
+            // para saber que animacion visual corresponde en pantalla
+            const isoMove = toIsometric({ x: dx, y: dy });
+
+            // usamos isoMove.x e isoMove.y para decidir la direccion visual
             const direction =
-                Math.abs(dx) > Math.abs(dy)
-                    ? dx > 0 ? 'right' : 'left'
-                    : dy > 0 ? 'down' : 'up';
+                Math.abs(isoMove.x) > Math.abs(isoMove.y)
+                    ? isoMove.x > 0 ? 'right' : 'left'
+                    : isoMove.y > 0 ? 'down' : 'up';
 
             character.className = `character ${direction}`;
 
-            // calculo cual sera mi siguiente posicion logica basada en la velocidad
+            // calculo la siguiente posicion logica basada en la velocidad
             const nextPos = {
                 x: currentPos.x + (dx / dist) * this.speed,
                 y: currentPos.y + (dy / dist) * this.speed
             };
 
-            // consulto al controlador si la siguiente posicion es valida, si choco con algo me detengo
+            // verifica colisiones
             if (!this.movementController.isValidPosition(nextPos)) {
                 character.className = 'character idle';
                 this.isMoving = false;
@@ -60,27 +64,25 @@ export class MovementRunner {
 
             currentPos = nextPos;
 
-            // aqui comienza el proceso de renderizado en pantalla
+            // renderizado en pantalla
             const { scale, horizontalIsoOffset, verticalIsoOffset } = renderParams;
 
-            // convierto mi posicion logica a coordenadas isometricas para la pantalla
+            // convierto posicion logica a coordenadas de pantalla
             const iso = toIsometric(currentPos);
             const screenX = (iso.x + horizontalIsoOffset) * scale;
             const screenY = (iso.y + verticalIsoOffset) * scale;
 
-            // calculo las dimensiones visuales del sprite escaladas
             const visualWidth = CHAR_SPRITE_WIDTH * scale;
             const visualHeight = CHAR_SPRITE_HEIGHT * scale;
             const FOOT_ADJUSTMENT = visualHeight * 0.1;
 
-            // posiciono el elemento en el dom ajustando el centro y los offsets globales
+            // posiciono el elemento en el dom
             character.style.left =
                 `${screenX - visualWidth / 2 + GLOBAL_COLLISION_OFFSET_X * scale}px`;
 
             character.style.top =
                 `${screenY - visualHeight + FOOT_ADJUSTMENT + GLOBAL_COLLISION_OFFSET_Y * scale}px`;
 
-            // ajusto el indice z para que la profundidad visual sea correcta segun mi posicion y
             character.style.zIndex = Math.floor(screenY);
 
             requestAnimationFrame(step);
