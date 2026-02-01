@@ -1,43 +1,54 @@
-/*manager.js*/ 
+// manager.js
 import * as SAT from 'sat';
 import { loadCollisionData } from './data-loader.js';
-import { renderDebugPolygons, drawCharacterHitbox as realDrawCharacterHitbox } from './debugger.js';
+import {
+    renderDebugPolygons,
+    drawCharacterHitbox as realDrawCharacterHitbox
+} from './debugger.js';
 import { DEBUG_MODE } from './config.js';
 import { getRenderParams } from './render-params.js';
 
 let obstacles = [];
 let interactables = [];
+let walkables = [];
 
 /**
- * Inicializa el sistema de colisión cargando los polígonos.
- * Siempre devuelve los parámetros de renderizado, aunque DEBUG_MODE sea false.
+ * Inicializa el sistema de colisiones
  */
 export async function initCollisionSystem(mapContainer) {
     try {
         const data = await loadCollisionData();
-        obstacles = data.obstacles;
-        interactables = data.interactables;
+
+        obstacles = data.obstacles || [];
+        interactables = data.interactables || [];
+        walkables = data.walkables || [];
 
         const renderParams = getRenderParams();
 
         if (DEBUG_MODE && mapContainer) {
-            renderDebugPolygons(mapContainer, obstacles, interactables, renderParams);
+            renderDebugPolygons(
+                mapContainer,
+                obstacles,
+                interactables,
+                walkables,
+                renderParams
+            );
         }
 
         return renderParams;
     } catch (error) {
-        console.error('❌ Error al inicializar el sistema de colisión:', error);
-        return getRenderParams(); // Siempre devolvemos algo válido
+        console.error('❌ Error al inicializar colisiones:', error);
+        return getRenderParams();
     }
 }
 
 /**
- * Verifica si un polígono del personaje colisiona con algún obstáculo.
+ * 🟥 Colisión dura
+ * Devuelve TRUE si el personaje choca con un obstáculo
  */
-export function checkCollision(charPolygon) {
+export function hasHardCollision(charPolygon) {
     for (const obstacle of obstacles) {
-        const response = new SAT.Response();
-        if (SAT.testPolygonPolygon(charPolygon, obstacle.satShape, response)) {
+        if (SAT.testPolygonPolygon(charPolygon, obstacle.satShape)) {
             return true;
         }
     }
@@ -45,12 +56,35 @@ export function checkCollision(charPolygon) {
 }
 
 /**
- * Obtiene el objeto interactivo con el que colisiona el polígono del personaje.
+ * 🟩 Piso caminable
+ * Devuelve TRUE si el personaje está sobre un área caminable
+ */
+export function isOnWalkable(charPolygon) {
+    for (const floor of walkables) {
+        if (SAT.testPolygonPolygon(charPolygon, floor.satShape)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * ✅ Validación final de movimiento
+ * - NO debe chocar con obstáculos
+ * - SÍ debe estar sobre piso
+ */
+export function canMoveTo(charPolygon) {
+    if (hasHardCollision(charPolygon)) return false;
+    if (!isOnWalkable(charPolygon)) return false;
+    return true;
+}
+
+/**
+ * 🟣 Interacciones
  */
 export function getInteractedObject(charPolygon) {
     for (const interactable of interactables) {
-        const response = new SAT.Response();
-        if (SAT.testPolygonPolygon(charPolygon, interactable.satShape, response)) {
+        if (SAT.testPolygonPolygon(charPolygon, interactable.satShape)) {
             return interactable;
         }
     }
@@ -58,8 +92,7 @@ export function getInteractedObject(charPolygon) {
 }
 
 /**
- * Wrapper seguro de drawCharacterHitbox.
- * Permite que character-behavior siga llamando a la función sin depender de DEBUG_MODE.
+ * Debug seguro del hitbox del personaje
  */
 export function drawCharacterHitbox(charPoly, mapContainer, renderParams) {
     if (DEBUG_MODE) {
