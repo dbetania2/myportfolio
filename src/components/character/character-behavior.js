@@ -1,83 +1,58 @@
-//character-behavior.js
-import * as SAT from 'sat';
-import { initCollisionSystem, checkCollision, drawCharacterHitbox } from '../../lib/collision/manager.js';
-import { toIsometric, toCartesian } from '../../lib/collision/coords.js';
+// character-behavior.js
+// esta clase controla el comportamiento de mi personaje, inicializa el sistema de colisiones y maneja el movimiento cuando hago click en el mapa
 
-let characterPolygon;
+import { initCollisionSystem } from '../../lib/collision/manager.js';
+import { toCartesian } from '../../lib/collision/coords.js';
+import { initInteractionManager } from '../character/interaction-manager.js';
+import { MovementController } from '../../lib/collision/movement-controller.js';
+import { MovementRunner } from '../../lib/collision/movement-runner.js';
 
-/**
- * Inicializa el movimiento del personaje.
- */
+// instancio los controladores necesarios para gestionar el movimiento
+const movementController = new MovementController();
+const movementRunner = new MovementRunner(movementController);
+
+// defino mi posicion logica inicial en 0,0
+let logicalPosition = { x: 0, y: 0 };
+
 export async function initCharacterMovement(mapContainer) {
+    // obtengo la referencia al elemento del personaje
     const character = document.getElementById('character');
     
-    if (!character || !mapContainer) {
-        console.error("No se encontraron los elementos 'character' o 'map-container'.");
-        return;
-    }
+    // si no encuentro el personaje o el contenedor, no hago nada
+    if (!character || !mapContainer) return;
 
-    // Ahora siempre recibimos renderParams válidos, debug o no
+    // inicializo el sistema de colisiones y guardo los parametros de renderizado
     const renderParams = await initCollisionSystem(mapContainer);
+    
+    // inicio el gestor de interacciones pasandole los parametros necesarios
+    initInteractionManager(mapContainer, renderParams);
 
+    // escucho los clicks en el contenedor del mapa
     mapContainer.addEventListener('click', (e) => {
         const rect = mapContainer.getBoundingClientRect();
-        const charWidth = character.offsetWidth;
-        const charHeight = character.offsetHeight;
-
-        const currentX = parseFloat(character.style.left) || 0;
-        const currentY = parseFloat(character.style.top) || 0;
-
-        const clickXRelativeToMap = e.clientX - rect.left;
-        const clickYRelativeToMap = e.clientY - rect.top;
+        
+        // calculo las coordenadas del click relativas al contenedor
+        const clickX = e.clientX - rect.left;
+        const clickY = e.clientY - rect.top;
 
         const { scale, horizontalIsoOffset, verticalIsoOffset } = renderParams;
 
-        const isoClickX_BeforeOffsets = (clickXRelativeToMap / scale) - horizontalIsoOffset;
-        const isoClickY_BeforeOffsets = (clickYRelativeToMap / scale) - verticalIsoOffset;
+        // normalizo las coordenadas aplicando la escala y el offset isometrico
+        const isoX = (clickX / scale) - horizontalIsoOffset;
+        const isoY = (clickY / scale) - verticalIsoOffset;
 
-        const targetTiledPos = toCartesian({ isoX: isoClickX_BeforeOffsets, isoY: isoClickY_BeforeOffsets });
+        // convierto las coordenadas a cartesianas para obtener el destino
+        const targetPos = toCartesian({ isoX, isoY });
 
-        const FEET_HITBOX_WIDTH_PX = charWidth * 0.2;
-        const FEET_HITBOX_HEIGHT_PX = charHeight * 0.2;
-        const FEET_Y_OFFSET_FROM_SPRITE_BOTTOM = 2;
+        // ejecuto el movimiento progresivo hacia la posicion destino
+        movementRunner.move(
+            character,
+            logicalPosition,
+            targetPos,
+            renderParams
+        );
 
-        const isoCharDisplayPos = toIsometric(targetTiledPos);
-
-        const idealFeetBaseCSS_X = (isoCharDisplayPos.x + horizontalIsoOffset) * scale;
-        const idealFeetBaseCSS_Y = (isoCharDisplayPos.y + verticalIsoOffset) * scale;
-
-        const targetX_raw = idealFeetBaseCSS_X - (charWidth / 2);
-        const targetY_raw = idealFeetBaseCSS_Y - (charHeight - (FEET_HITBOX_HEIGHT_PX + FEET_Y_OFFSET_FROM_SPRITE_BOTTOM));
-
-        const X_VISUAL_ADJUSTMENT_PX = -50;
-        const Y_VISUAL_ADJUSTMENT_PX = -100;
-
-        let targetX = targetX_raw + X_VISUAL_ADJUSTMENT_PX;
-        let targetY = targetY_raw + Y_VISUAL_ADJUSTMENT_PX;
-
-        characterPolygon = new SAT.Box(
-            new SAT.Vector(targetTiledPos.x, targetTiledPos.y),
-            FEET_HITBOX_WIDTH_PX,
-            FEET_HITBOX_HEIGHT_PX
-        ).toPolygon();
-
-        drawCharacterHitbox(characterPolygon, mapContainer, renderParams);
-
-        if (!checkCollision(characterPolygon)) {
-            console.log('🚧 Fuera del área caminable. Movimiento cancelado.');
-            return;
-        }
-
-        const direction = Math.abs(targetX - currentX) > Math.abs(targetY - currentY)
-            ? targetX > currentX ? 'right' : 'left'
-            : targetY > currentY ? 'down' : 'up';
-
-        character.className = `character ${direction}`;
-        character.style.left = `${targetX}px`;
-        character.style.top = `${targetY}px`;
-
-        setTimeout(() => {
-            character.className = 'character idle';
-        }, 500);
+        // actualizo mi posicion logica actual al nuevo destino
+        logicalPosition = targetPos;
     });
 }

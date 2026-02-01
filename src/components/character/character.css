@@ -8,7 +8,7 @@
   transform-origin: top left; 
   overflow: hidden; /* Oculta las partes de la imagen que salen del contenedor */
   image-rendering: pixelated; /* Mantiene la nitidez de los píxeles */
-  transition: top 0.5s ease, left 0.5s ease; /* Suaviza el movimiento */
+  /*transition: top 0.5s ease, left 0.5s ease; /* Suaviza el movimiento */
   z-index: 10;
 }
 
