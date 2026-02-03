@@ -39,12 +39,30 @@ body {
 }
 
 #map-image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  image-rendering: pixelated;
+  /* 1. RESTAURAMOS EL TAMAÑO REAL */
+  /* Quitamos width: 100% porque eso la encogía a 800px. */
+  /* Al poner auto, la imagen recupera sus 3520x1920 originales. */
+  width: auto; 
+  height: auto;
+  
+  /* 2. CENTRADO ABSOLUTO */
+  /* Esto coloca el centro de la imagen en el centro de la pantalla */
   position: absolute;
+  top: 50%;
+  left: 50%;
+  
+  /* 3. ZOOM Y AJUSTE */
+  /* translate(-50%, -50%): Alinea el centro exacto de la imagen con el centro de la pantalla. */
+  /* scale(3.5): Aplica el zoom IGUAL que en tus colisiones (VISUAL_SCALE). */
+  transform: translate(-50%, -50%) scale(3); 
+  
+  /* 4. CALIDAD Y CAPAS */
+  transform-origin: center center; /* El zoom ocurre desde el centro hacia afuera */
+  image-rendering: pixelated;      /* Mantiene los píxeles nítidos (estilo retro) */
+  pointer-events: none;            /* Permite que los clics pasen al juego */
+  z-index: 1;                      /* Se queda detrás de los personajes y debug */
 }
+
 
 /* Objeto genérico en el mapa */
 .map-object {
