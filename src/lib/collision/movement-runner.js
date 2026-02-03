@@ -6,42 +6,35 @@ import {
     CHAR_SPRITE_HEIGHT
 } from './config.js';
 
-// esta clase se encarga de ejecutar el bucle de movimiento visual del personaje
+import { drawCharacterHitbox } from './manager.js';
+
 export class MovementRunner {
     constructor(movementController) {
         this.movementController = movementController;
         this.isMoving = false;
-        // velocidad del personaje
-        this.speed = 0.6; 
+        this.speed = 0.6;
     }
 
     move(character, startPos, targetPos, renderParams) {
-        // si ya se esta moviendo ignora la orden
         if (this.isMoving) return;
         this.isMoving = true;
 
         let currentPos = { ...startPos };
+        let lastDistance = Infinity; // 🔑 anti-bug deslizamiento
 
         const step = () => {
-            // calculo la distancia restante hacia el objetivo
             const dx = targetPos.x - currentPos.x;
             const dy = targetPos.y - currentPos.y;
-
             const dist = Math.hypot(dx, dy);
 
-            // si esta cerca del destino se detiene
             if (dist < this.speed) {
                 character.className = 'character idle';
                 this.isMoving = false;
                 return;
             }
 
-            // CORRECCION AQUI:
-            // convertimos el vector de movimiento (dx, dy) a isometrico
-            // para saber que animacion visual corresponde en pantalla
+            // Dirección visual
             const isoMove = toIsometric({ x: dx, y: dy });
-
-            // usamos isoMove.x e isoMove.y para decidir la direccion visual
             const direction =
                 Math.abs(isoMove.x) > Math.abs(isoMove.y)
                     ? isoMove.x > 0 ? 'right' : 'left'
@@ -49,25 +42,50 @@ export class MovementRunner {
 
             character.className = `character ${direction}`;
 
-            // calculo la siguiente posicion logica basada en la velocidad
-            const nextPos = {
-                x: currentPos.x + (dx / dist) * this.speed,
-                y: currentPos.y + (dy / dist) * this.speed
-            };
+            // Próximo paso lógico
+            const stepX = (dx / dist) * this.speed;
+            const stepY = (dy / dist) * this.speed;
 
-            // verifica colisiones
-            if (!this.movementController.isValidPosition(nextPos)) {
+            const tryX = { x: currentPos.x + stepX, y: currentPos.y };
+            const tryY = { x: currentPos.x, y: currentPos.y + stepY };
+
+            let moved = false;
+
+            if (this.movementController.isValidPosition(tryX)) {
+                currentPos.x = tryX.x;
+                moved = true;
+            }
+
+            if (this.movementController.isValidPosition(tryY)) {
+                currentPos.y = tryY.y;
+                moved = true;
+            }
+
+            //  No se pudo mover → cortar
+            if (!moved) {
                 character.className = 'character idle';
                 this.isMoving = false;
                 return;
             }
 
-            currentPos = nextPos;
+            //  Anti sliding infinito
+            const newDx = targetPos.x - currentPos.x;
+            const newDy = targetPos.y - currentPos.y;
+            const newDistance = Math.hypot(newDx, newDy);
 
-            // renderizado en pantalla
+            if (newDistance >= lastDistance - 0.01) {
+                character.className = 'character idle';
+                this.isMoving = false;
+                return;
+            }
+
+            lastDistance = newDistance;
+
+            // -------------------------
+            // RENDER VISUAL
+            // -------------------------
             const { scale, horizontalIsoOffset, verticalIsoOffset } = renderParams;
 
-            // convierto posicion logica a coordenadas de pantalla
             const iso = toIsometric(currentPos);
             const screenX = (iso.x + horizontalIsoOffset) * scale;
             const screenY = (iso.y + verticalIsoOffset) * scale;
@@ -76,7 +94,6 @@ export class MovementRunner {
             const visualHeight = CHAR_SPRITE_HEIGHT * scale;
             const FOOT_ADJUSTMENT = visualHeight * 0.1;
 
-            // posiciono el elemento en el dom
             character.style.left =
                 `${screenX - visualWidth / 2 + GLOBAL_COLLISION_OFFSET_X * scale}px`;
 
@@ -84,6 +101,16 @@ export class MovementRunner {
                 `${screenY - visualHeight + FOOT_ADJUSTMENT + GLOBAL_COLLISION_OFFSET_Y * scale}px`;
 
             character.style.zIndex = Math.floor(screenY);
+
+            // Debug hitbox
+            const hitbox = this.movementController.getHitbox?.();
+            if (hitbox) {
+                drawCharacterHitbox(
+                    hitbox,
+                    character.parentElement,
+                    renderParams
+                );
+            }
 
             requestAnimationFrame(step);
         };
