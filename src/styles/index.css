@@ -1,4 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+.sr-only {
+  position: absolute;   /* Lo saca del flujo normal (no empuja tu juego hacia abajo) */
+  width: 1px;           /* Ocupa el mínimo espacio posible */
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;     /* Si el texto es largo, lo corta visualmente */
+  clip: rect(0,0,0,0);  /* La clave mágica: lo recorta para que sea invisible al ojo */
+  white-space: nowrap;  /* Evita que salte de línea */
+  border-width: 0;
+}
 
 /* ------------------ GLOBAL ------------------ */
 body {
