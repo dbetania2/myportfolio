@@ -20,7 +20,7 @@
   width: 90%;
   max-width: 1200px;
   height: 85vh;
-  background-color: #f4f1ea; 
+  background-color: #ac9b75; 
   background-image: radial-gradient(#e0dcd3 1px, transparent 1px);
   background-size: 20px 20px;
   border: 15px solid #5d4037;
@@ -84,7 +84,10 @@
   box-shadow: 6px 6px 0px rgba(0,0,0,0.25); 
   
   /* Borde fino para definir mejor los pixeles */
-  border: 1px solid rgba(0,0,0,0.1);
+  border: 4px solid rgba(0,0,0,0.1);
+
+  /* Conecta con el SVG que pusimos en el JSX para quitar el suavizado */
+  /*filter: url(#pixel-edges);*/
 }
 
 .sticky-note:hover {
@@ -140,4 +143,217 @@
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
+}
+
+/* EL PIN DE PIXEL ART */
+.pixel-pin {
+  position: absolute;
+  /* Lo subimos un poco para que parezca clavado en el borde */
+  top: -15px; 
+  left: 50%;
+  /* Centrado perfecto y reducido a la mitad (scale 0.5) porque 10px por pixel es muy grande */
+  transform: translateX(-50%) scale(0.5); 
+  
+  width: 10px;
+  height: 10px;
+  z-index: 60; /* Encima de la nota */
+  
+  /* Tu diseño de PIN normalizado y con variable de color */
+  box-shadow: 
+    10px 0px 0 0 var(--pin-color), 
+    20px 0px 0 0 var(--pin-color), 
+    30px 0px 0 0 var(--pin-color), 
+    0px 10px 0 0 var(--pin-color), 
+    10px 10px 0 0 var(--pin-color), 
+    20px 10px 0 0 var(--pin-color), 
+    30px 10px 0 0 var(--pin-color), 
+    40px 10px 0 0 var(--pin-color), 
+    0px 20px 0 0 var(--pin-color), 
+    10px 20px 0 0 var(--pin-color), 
+    20px 20px 0 0 var(--pin-color), 
+    30px 20px 0 0 var(--pin-color), 
+    40px 20px 0 0 var(--pin-color), 
+    0px 30px 0 0 var(--pin-color), 
+    10px 30px 0 0 var(--pin-color), 
+    20px 30px 0 0 var(--pin-color), 
+    30px 30px 0 0 var(--pin-color), 
+    40px 30px 0 0 var(--pin-color), 
+    10px 40px 0 0 var(--pin-color), 
+    20px 40px 0 0 var(--pin-color), 
+    30px 40px 0 0 var(--pin-color);
+}
+
+
+
+/* === INDICADOR DE QUE SE PUEDE HACER CLIC === */
+.clickable-image {
+  cursor: zoom-in; /* La lupa con el + */
+  transition: filter 0.2s;
+}
+
+.clickable-image:hover {
+  filter: brightness(1.1); /* Brilla un poco al pasar el mouse */
+}
+
+
+/* ... (Todo lo anterior sigue igual) ... */
+
+/* === LIGHTBOX (Fondo Negro) === */
+.lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.95);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.2s ease-out;
+  overflow: hidden; /* Importante */
+}
+
+/* Área que permite scroll si la imagen es muy grande */
+.lightbox-scroll-area {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: auto; /* <--- ESTO PERMITE MOVERSE SI HAY ZOOM */
+  cursor: grab;
+}
+
+.lightbox-scroll-area img {
+  /* === CAMBIO CLAVE PARA PIXEL ART === */
+  /* Forzamos a que la imagen SIEMPRE intente ocupar el 85% de la altura de la pantalla.
+     Al ser Pixel Art, esto hará que los 64px se conviertan en 800px de golpe. */
+  height: 85vh; 
+  width: auto; 
+  
+  /* Pero si es muy ancha, que respete el ancho de la pantalla */
+  max-width: 95%; 
+  
+  /* Asegura que la proporción se mantenga perfecta */
+  object-fit: contain;
+  
+  /* Píxeles crujientes y duros al estirarse */
+  image-rendering: pixelated;       
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  
+  /* Estética */
+  border: 4px solid #fff;
+  box-shadow: 0 0 50px rgba(255, 255, 255, 0.1);
+  
+  /* Animación suave al hacer zoom manual */
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+}
+
+/* === CONTROLES DE ZOOM === */
+.zoom-controls {
+  margin-top: 20px;
+  background: #2c2c2c;
+  padding: 10px 20px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 5px 15px rgba(255,255,255,0.1);
+}
+
+.zoom-controls button {
+  background: #fff;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zoom-controls button:hover {
+  background: #ffeb3b; /* Amarillo retro */
+}
+
+.zoom-controls span {
+  color: #fff;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  min-width: 50px;
+  text-align: center;
+}
+
+.lightbox-hint {
+  margin-top: 10px;
+  color: #888;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+}
+
+
+/* === FLECHAS DE NAVEGACIÓN === */
+.nav-arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #2c2c2c;
+  color: #fff;
+  border: 2px solid #fff;
+  width: 50px;
+  height: 50px;
+  font-family: 'Courier New', monospace;
+  font-size: 2rem;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 10001; /* Encima de la imagen */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
+  transition: transform 0.1s;
+}
+
+.nav-arrow:hover {
+  background: #ffeb3b;
+  color: #000;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.nav-arrow.left { left: 20px; }
+.nav-arrow.right { right: 20px; }
+
+
+/* === VISOR DE NOTAS (Big Note) === */
+.lightbox-note-container {
+  background: #ffeb3b; /* Mismo amarillo que las notas */
+  width: 80vw;
+  max-width: 600px;
+  min-height: 50vh;
+  padding: 40px;
+  position: relative;
+  box-shadow: 15px 15px 0 rgba(0,0,0,0.5); /* Sombra dura pixel art */
+  border: 4px solid #2c2c2c;
+  font-family: 'Courier New', monospace;
+  color: #333;
+  overflow-y: auto;
+  
+  /* Filtro para bordes pixelados si rota ligeramente (opcional) */
+  filter: url(#pixel-edges); 
+}
+
+.lightbox-note-content {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  white-space: pre-wrap; /* Respeta los saltos de línea */
+}
+
+.lightbox-note-content p {
+  margin-bottom: 1rem;
 }
