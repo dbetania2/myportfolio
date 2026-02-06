@@ -1,69 +1,142 @@
 ---
 import WindowController from '../components/WindowController.jsx';
 import Character from '../components/character/Character.astro';
+import SEO from '../components/seo/SEO.astro';
+import { getPortfolioData } from '../utils/strapi.ts';
 
+// 1. Data Fetching
+const { aboutMe, projects, sections,whiteboardItems } = await getPortfolioData();
 
-// variable para la url de la api de strapi
-const API_URL = import.meta.env.PUBLIC_STRAPI_API_URL;
+// 2. Variables para SEO
+const siteName = "Daiana Del Grecco - Portfolio";
+const siteDescription = aboutMe?.attributes?.short_description ?? "Portfolio profesional de desarrollo frontend y experiencias interactivas.";
+const ogImage = aboutMe?.attributes?.profile_picture?.data?.attributes?.url;
 
-
-// se realizan peticiones a la api en paralelo para mejorar el rendimiento
-const [resAbout, resProjects, resSections] = await Promise.all([
-  fetch(`${API_URL}/about-me?populate=profile_picture,SocialLink,skills,biography_blocks,biography_blocks.image`),
-  fetch(`${API_URL}/projects?populate=featured_image,tags,gallery`),
-  fetch(`${API_URL}/project-sections?populate=tags`)
-]);
-
-// se maneja la respuesta de las peticiones de manera robusta
-const aboutData = resAbout.ok ? await resAbout.json() : { data: null };
-const projectsData = resProjects.ok ? await resProjects.json() : { data: [] };
-const sectionsData = resSections.ok ? await resSections.json() : { data: [] };
-
-
-
-// se extraen los datos de las respuestas para ser pasados a los componentes
-const aboutMeData = aboutData.data;
-const projectsAllData = projectsData.data;
+// Mapeamos los links
+const socialUrls = aboutMe?.attributes?.SocialLink?.map((l) => l.platform_url);
 ---
 
 <!DOCTYPE html>
-<html lang="en">
-<head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>Mi Portfolio</title>
- <link rel="stylesheet" href="/src/styles/index.css">
-</head>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0f172a" />
+
+    <link rel="stylesheet" href="/src/styles/index.css" />
+
+    <SEO 
+      title={siteName}
+      description={siteDescription}
+      image={ogImage}
+      socialLinks={socialUrls}
+    />
+  </head>
+
 <body>
- <div id="welcome-screen">
-   <div id="welcome-text">
-     <div class="word"><span>W</span><span>e</span><span>l</span><span>c</span><span>o</span><span>m</span><span>e</span></div>
-     <div class="word"><span>t</span><span>o</span></div>
-     <div class="word"><span>m</span><span>y</span></div>
-     <div class="word"><span>p</span><span>o</span><span>r</span><span>t</span><span>f</span><span>o</span><span>l</span><span>i</span><span>o</span></div>
-   </div>
- </div>
+    <main class="sr-only">
+      <h1>{siteName}</h1>
 
+      {aboutMe && (
+        <section id="about">
+          <h2>Sobre mí</h2>
+          
+          <p>
+            Soy una desarrolladora de software apasionada por crear experiencias web únicas combinando lógica robusta con diseño creativo.
+            Actualmente cursando la Tecnicatura Universitaria en Programación (UTN).
+          </p>
+          
+          <p>Ubicación: Argentina</p>
+          <p>{siteDescription}</p>
 
- <div id="map-container">
-   <img src="/assets/portflioactualizado2.png" alt="Mapa" id="map-image">
-   <canvas id="gameCanvas"></canvas> 
+          {aboutMe.attributes.SocialLink?.length > 0 && (
+            <nav aria-label="Mis redes">
+              <h3>Encuéntrame en:</h3>
+              <ul>
+                {aboutMe.attributes.SocialLink.map((link) => (
+                  <li>
+                    <a href={link.platform_url} target="_blank" rel="noopener noreferrer">
+                      {link.platform}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
+        </section>
+      )}
 
+      {projects.length > 0 && (
+        <section id="projects">
+          <h2>Proyectos</h2>
+          <ul>
+            {projects.map((project) => (
+              <li>
+                <h3>{project.attributes.title}</h3>
+                <p>{project.attributes.description}</p>
+                
+                {/* STACK TECNOLÓGICO */}
+                {project.attributes.tags?.data?.length ? (
+                  <p>
+                    Tecnologías: {project.attributes.tags.data.map(t => t.attributes.name).join(', ')}
+                  </p>
+                ) : null}
 
- <WindowController
-    client:load
-    aboutMeData={aboutMeData}
-    projectsData={projectsAllData}
-    sectionsData={sectionsData.data}
-  />
+                {/* CORRECCIÓN: LINKS DE GITHUB Y DEMO
+                    Ahora mostramos ambos si existen.
+                */}
+                <nav aria-label={`Enlaces para ${project.attributes.title}`}>
+                  
+                  {/* Link al Repositorio (OBLIGATORIO para devs) */}
+                  {project.attributes.github_url && (
+                    <a href={project.attributes.github_url}>Ver Código en GitHub</a>
+                  )}
 
+                  {/* Separador visual para el robot/lector */}
+                  {project.attributes.github_url && project.attributes.project_url && ( <span> | </span> )}
 
+                  {/* Link al Deploy (Opcional) */}
+                  {project.attributes.project_url && (
+                    <a href={project.attributes.project_url}>Ver Proyecto Online</a>
+                  )}
+                </nav>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </main>
 
- <div id="root"></div>
- <Character />
- </div>
+    <div id="welcome-screen" aria-hidden="true">
+      <div id="welcome-text">
+        <div class="word"><span>W</span><span>e</span><span>l</span><span>c</span><span>o</span><span>m</span><span>e</span></div>
+        <div class="word"><span>t</span><span>o</span></div>
+        <div class="word"><span>m</span><span>y</span></div>
+        <div class="word"><span>p</span><span>o</span><span>r</span><span>t</span><span>f</span><span>o</span><span>l</span><span>i</span><span>o</span></div>
+      </div>
+    </div>
 
+    <div id="map-container">
+      <img
+        src="/assets/portflioactualizado2.png"
+        alt="Mapa interactivo del portfolio"
+        id="map-image"
+        loading="eager"
+      />
 
- <script type="module" src="/src/main.jsx"></script>
-</body>
+      <canvas id="gameCanvas"></canvas>
+
+      <WindowController
+        client:load
+        aboutMeData={aboutMe}
+        projectsData={projects}
+        sectionsData={sections}
+        whiteboardData={whiteboardItems}
+      />
+
+      <Character />
+    </div>
+
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
