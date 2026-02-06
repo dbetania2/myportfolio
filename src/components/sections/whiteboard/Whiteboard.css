@@ -1,0 +1,143 @@
+/* EL FONDO (Overlay) */
+.whiteboard-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(3px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* EL PIZARRÓN (Contenedor) */
+.whiteboard-container {
+  position: relative;
+  width: 90%;
+  max-width: 1200px;
+  height: 85vh;
+  background-color: #f4f1ea; 
+  background-image: radial-gradient(#e0dcd3 1px, transparent 1px);
+  background-size: 20px 20px;
+  border: 15px solid #5d4037;
+  border-radius: 4px;
+  box-shadow: 0 0 50px rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+
+.close-board-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #d32f2f;
+  color: white;
+  border: none;
+  width: 35px;
+  height: 35px;
+  font-size: 1.2rem;
+  border-radius: 50%; /* Si quieres que sea cuadrado pixel, cambia esto a 0% */
+  cursor: pointer;
+  z-index: 100;
+  
+  /* PIXEL ART: Sombra dura en botón */
+  box-shadow: 3px 3px 0px rgba(0,0,0,0.5); 
+  transition: transform 0.1s; /* Más rápido para sentirlo "snappy" */
+}
+
+.close-board-btn:hover {
+  transform: scale(1.1);
+}
+
+.board-title {
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  font-family: 'Courier New', monospace;
+  color: #5d4037;
+  opacity: 0.8; /* Subí un poco la opacidad para que se lea mejor */
+  margin: 0;
+  pointer-events: none;
+  font-weight: bold;
+}
+
+.board-surface {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* LAS NOTAS (Comunes) */
+.sticky-note {
+  position: absolute;
+  padding: 1rem;
+  transition: transform 0.2s, z-index 0s;
+  cursor: default;
+
+  /* PIXEL ART TRUCO #1: SOMBRAS DURAS 
+     En lugar de '15px' de blur, usamos '0px'. 
+     Esto hace que parezca un objeto de videojuego antiguo.
+  */
+  box-shadow: 6px 6px 0px rgba(0,0,0,0.25); 
+  
+  /* Borde fino para definir mejor los pixeles */
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+.sticky-note:hover {
+  z-index: 50;
+  transform: scale(1.05) rotate(0deg) !important;
+  /* Sombra dura al levantar */
+  box-shadow: 10px 10px 0px rgba(0,0,0,0.3);
+}
+
+/* ESTILO TIPO NOTA (Post-it) */
+.sticky-note.type-note {
+  background: #ffeb3b;
+  width: 220px;
+  min-height: 150px;
+  font-family: 'Courier New', monospace; /* Courier va mejor con lo retro */
+  font-weight: bold;
+  font-size: 1rem;
+  color: #333;
+}
+
+/* ESTILO TIPO IMAGEN (Polaroid / Foto) */
+.sticky-note.type-image {
+  background: white;
+  padding: 10px 10px 30px 10px;
+  width: auto;
+  max-width: 300px;
+}
+
+.sticky-note.type-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 1px solid #ddd;
+  
+  /* PIXEL ART TRUCO #2: RENDERIZADO PIXELADO
+     Esto es OBLIGATORIO. Hace que los navegadores NO suavicen 
+     la imagen al escalarla o rotarla. Se verán los cuadraditos perfectos.
+  */
+  image-rendering: pixelated;       /* Chrome, Safari, Opera */
+  image-rendering: -moz-crisp-edges; /* Firefox */
+  image-rendering: crisp-edges;      /* Estándar futuro */
+}
+
+.image-caption {
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: #555;
+  margin-top: 10px;
+  text-align: center;
+  font-weight: bold;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
