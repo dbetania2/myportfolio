@@ -16,8 +16,8 @@ export const CHAR_SPRITE_WIDTH = 32;
 export const CHAR_SPRITE_HEIGHT = 32;
 
 // configuro el tamaño real de mi imagen de fondo
-export const MAP_WIDTH = 700; 
-export const MAP_HEIGHT = 700;
+export const MAP_WIDTH = 600; 
+export const MAP_HEIGHT = 600;
 
 // defino las dimensiones de los tiles segun como configure mi archivo json en tiled
 export const TILE_WIDTH = 64; 

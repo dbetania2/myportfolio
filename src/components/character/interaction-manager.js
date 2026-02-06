@@ -18,30 +18,32 @@ export function initInteractionManager(mapContainer, params) {
     mapContainerElement = mapContainer;
     renderParams = params;
 
-    // agrego el evento de click usando la fase de captura para interceptarlo antes de que llegue al sistema de movimiento
+    // agrego el evento de click usando la fase de captura
     mapContainerElement.addEventListener('click', handleClick, true);
+    
+    // NUEVO: evento para detectar movimiento y cambiar el cursor
+    mapContainerElement.addEventListener('mousemove', handleMouseMove);
 }
 
-function handleClick(event) {
-    if (!mapContainerElement) return;
-
+// NUEVA FUNCIÓN AUXILIAR: Reutilizamos esta lógica para no escribirla dos veces
+function createHitbox(event) {
     const rect = mapContainerElement.getBoundingClientRect();
     
-    // calculo la posicion del click relativa al contenedor del mapa
-    const clickX = event.clientX - rect.left;
-    const clickY = event.clientY - rect.top;
+    // calculo la posicion relativa al contenedor
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
 
     const { scale, horizontalIsoOffset, verticalIsoOffset } = renderParams;
 
     // ajusto las coordenadas segun la escala y el desplazamiento isometrico
-    const isoX = (clickX / scale) - horizontalIsoOffset;
-    const isoY = (clickY / scale) - verticalIsoOffset;
+    const isoX = (x / scale) - horizontalIsoOffset;
+    const isoY = (y / scale) - verticalIsoOffset;
 
     // convierto el punto final a coordenadas cartesianas de mi mundo
     const worldPoint = toCartesian({ isoX, isoY });
 
-    // creo una hitbox cuadrada muy pequeña justo donde hice click para detectar colisiones precisas
-    const hitbox = new SAT.Polygon(
+    // creo una hitbox cuadrada muy pequeña para detectar colisiones precisas
+    return new SAT.Polygon(
         new SAT.Vector(worldPoint.x, worldPoint.y),
         [
             new SAT.Vector(0, 0),
@@ -50,6 +52,27 @@ function handleClick(event) {
             new SAT.Vector(0, 1),
         ]
     );
+}
+
+// NUEVA FUNCIÓN: Gestiona el cambio visual del cursor
+function handleMouseMove(event) {
+    if (!mapContainerElement) return;
+
+    const hitbox = createHitbox(event);
+    const interactedObject = getInteractedObject(hitbox);
+
+    if (interactedObject) {
+        mapContainerElement.style.cursor = 'pointer'; // Manito
+    } else {
+        mapContainerElement.style.cursor = 'default'; // Cursor normal
+    }
+}
+
+function handleClick(event) {
+    if (!mapContainerElement) return;
+
+    // Uso la función auxiliar para obtener la hitbox
+    const hitbox = createHitbox(event);
 
     // consulto al sistema de colisiones si mi hitbox toca algun objeto interactuable
     const interactedObject = getInteractedObject(hitbox);

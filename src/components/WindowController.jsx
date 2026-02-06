@@ -4,31 +4,37 @@ import ProjectsContent from "./sections/projects/ProjectsContent.jsx";
 import IconWindow from "../layouts/iconwindow/IconWindow.jsx";
 import ProjectDetail from "./sections/projects/ProjectDetail.jsx"; 
 import AboutMeDetail from "./sections/aboutme/AboutMeDetail.jsx";
+// 1. Importamos el nuevo componente
+import Whiteboard from "./sections/whiteboard/Whiteboard.jsx";
 
-export default function WindowController({ aboutMeData, projectsData, sectionsData }) {
+// 2. Recibimos 'whiteboardData' en las props
+export default function WindowController({ aboutMeData, projectsData, sectionsData, whiteboardData }) {
   const [activeInteraction, setActiveInteraction] = useState(null);
   const [showPcScreen, setShowPcScreen] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
 
   const BASE_URL = import.meta.env.PUBLIC_STRAPI_BASE_URL;
 
-  // Logs iniciales
+  // Logs iniciales (Agregamos whiteboardData para depurar)
   useEffect(() => {
     console.log("AboutMeData recibido:", aboutMeData);
     console.log("ProjectsData recibido:", projectsData);
     console.log("SectionsData recibido:", sectionsData);
-  }, [aboutMeData, projectsData, sectionsData]);
+    console.log("WhiteboardData recibido:", whiteboardData);
+  }, [aboutMeData, projectsData, sectionsData, whiteboardData]);
 
   // Detecta interacciones con objetos
   useEffect(() => {
     const handleInteraction = (event) => {
       const { type } = event.detail;
       console.log("Interacción detectada:", type);
+      
       if (type === "pc") {
         setShowPcScreen(true);
         setActiveInteraction(null);
         setSelectedProject(null);
       } else {
+        // Aquí entrará type === "whiteboard"
         setActiveInteraction(type);
         setShowPcScreen(false);
         setSelectedProject(null);
@@ -39,11 +45,19 @@ export default function WindowController({ aboutMeData, projectsData, sectionsDa
       document.removeEventListener("object-interacted", handleInteraction);
   }, []);
 
+  // Cierra ventanas "virtuales" y vuelve a la PC
   const closeWindow = () => {
     console.log("Cerrando ventana general");
     setActiveInteraction(null);
     setSelectedProject(null);
     setShowPcScreen(true);
+  };
+
+  // NUEVO: Cierra objetos "físicos" (como el Pizarrón) y vuelve al juego/habitación
+  const closeDirectInteraction = () => {
+    console.log("Cerrando interacción física");
+    setActiveInteraction(null); // Vuelve a null (se ve el juego de fondo)
+    setShowPcScreen(false);     // Asegura que la PC no salte
   };
 
   const closePcScreen = () => {
@@ -63,7 +77,7 @@ export default function WindowController({ aboutMeData, projectsData, sectionsDa
     setSelectedProject(null);
   };
 
-  // Mapa de ventanas para simplificar render
+  // Mapa de ventanas (Strategy Pattern)
   const windowMap = {
     aboutme: (
       <AboutMeDetail
@@ -76,12 +90,20 @@ export default function WindowController({ aboutMeData, projectsData, sectionsDa
       <IconWindow title="Proyectos" onClose={closeWindow}>
         <ProjectsContent
           projectsData={projectsData}
-          sections={sectionsData} // ✅ ahora pasamos las secciones
+          sections={sectionsData} 
           onSelectProject={openProject}
         />
       </IconWindow>
     ),
-    // Podés agregar más ventanas aquí simplemente registrando otra key
+    // 3. NUEVA ENTRADA: El Pizarrón
+    // Usamos 'whiteboard' porque ese es el "type" que pusiste en el polígono
+    whiteboard: (
+      <Whiteboard 
+        items={whiteboardData}    // Pasamos los datos de Strapi
+        baseUrl={BASE_URL}        // Para armar la URL de las imágenes
+        onClose={closeDirectInteraction} // Usamos la nueva función de cerrar
+      />
+    )
   };
 
   return (
@@ -98,7 +120,7 @@ export default function WindowController({ aboutMeData, projectsData, sectionsDa
         </div>
       )}
 
-      {/* Ventana activa */}
+      {/* Ventana activa (Aquí se pintará el Whiteboard si type es 'whiteboard') */}
       {!selectedProject && activeInteraction && windowMap[activeInteraction]}
 
       {/* Ventana de detalle de proyecto */}
