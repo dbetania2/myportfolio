@@ -160,30 +160,20 @@ body {
 }
 
 
-/* ------------------ aboutme------------------ */
-/* Imágenes de perfil en todo el sitio */
-.profile-picture {
-  border-radius: 50%;
-  border: 3px solid #dbab27;
-  image-rendering: pixelated; /* mantiene nitidez pixel art */
-}
-
-/* Enlaces */
-a {
-  text-decoration: none;
-  color: #dbab27;
-  transition: color 0.2s ease;
-}
-
-a:hover {
-  color: #e4f1e4;
-}
-
-/* Grillas reutilizables */
-.social-links-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
+/* Hint para salir de la PC */
+.pc-exit-hint {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-family: 'Courier New', monospace; /* O tu fuente pixelada */
+  font-size: 1.2rem;
+  text-shadow: 2px 2px 0 #000; /* Sombra negra para que se lea siempre */
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 5px 10px;
+  border-radius: 4px;
+  pointer-events: none; /* Para que el click pase a través del texto */
 }
 
 /* Animación de letras */
