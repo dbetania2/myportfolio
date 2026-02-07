@@ -4,10 +4,10 @@ import Character from '../components/character/Character.astro';
 import SEO from '../components/seo/SEO.astro';
 import { getPortfolioData } from '../utils/strapi.ts';
 
-// 1. Data Fetching
-const { aboutMe, projects, sections,whiteboardItems } = await getPortfolioData();
+// Data Fetching
+const { aboutMe, projects, sections,whiteboardItems,introDialogues } = await getPortfolioData();
 
-// 2. Variables para SEO
+// Variables para SEO
 const siteName = "Daiana Del Grecco - Portfolio";
 const siteDescription = aboutMe?.attributes?.short_description ?? "Portfolio profesional de desarrollo frontend y experiencias interactivas.";
 const ogImage = aboutMe?.attributes?.profile_picture?.data?.attributes?.url;
@@ -82,8 +82,8 @@ const socialUrls = aboutMe?.attributes?.SocialLink?.map((l) => l.platform_url);
                   </p>
                 ) : null}
 
-                {/* CORRECCIÓN: LINKS DE GITHUB Y DEMO
-                    Ahora mostramos ambos si existen.
+                {/* LINKS DE GITHUB Y DEMO
+                     mostramos ambos si existen.
                 */}
                 <nav aria-label={`Enlaces para ${project.attributes.title}`}>
                   
@@ -132,6 +132,7 @@ const socialUrls = aboutMe?.attributes?.SocialLink?.map((l) => l.platform_url);
         projectsData={projects}
         sectionsData={sections}
         whiteboardData={whiteboardItems}
+        introDialogues={introDialogues}
       />
 
       <Character />
