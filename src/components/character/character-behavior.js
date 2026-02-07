@@ -10,7 +10,9 @@ import { MovementRunner } from '../../lib/collision/movement-runner.js';
 // instancio los controladores necesarios para gestionar el movimiento
 const movementController = new MovementController();
 const movementRunner = new MovementRunner(movementController);
-
+export function getCharacterPosition() {
+    return logicalPosition;
+}
 // defino mi posicion logica inicial en 0,0
 let logicalPosition = { x: 0, y: 0 };
 
