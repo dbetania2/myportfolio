@@ -1,29 +1,46 @@
+// src/components/WindowController.jsx
 import React, { useState, useEffect } from "react";
 import PcComponent from "./pc/pcComponent/PcComponent.jsx";
 import ProjectsContent from "./sections/projects/ProjectsContent.jsx";
 import IconWindow from "../layouts/iconwindow/IconWindow.jsx";
 import ProjectDetail from "./sections/projects/ProjectDetail.jsx"; 
 import AboutMeDetail from "./sections/aboutme/AboutMeDetail.jsx";
-// 1. Importamos el nuevo componente
 import Whiteboard from "./sections/whiteboard/Whiteboard.jsx";
+import ContactMe from "./sections/contact/ContactMe.jsx";
+import ExitHint from "./ui/ExitHint.jsx";
+import DialogueBox from "./ui/DialogueBox.jsx"; 
 
-// 2. Recibimos 'whiteboardData' en las props
-export default function WindowController({ aboutMeData, projectsData, sectionsData, whiteboardData }) {
+// RECIBIMOS 'introDialogues' (Viene desde Astro)
+export default function WindowController({ 
+  aboutMeData, 
+  projectsData, 
+  sectionsData, 
+  whiteboardData, 
+  introDialogues 
+}) {
+  
+  // --- ESTADOS ---
   const [activeInteraction, setActiveInteraction] = useState(null);
   const [showPcScreen, setShowPcScreen] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
+  
+  //  estado para el diálogo
+  const [showDialogue, setShowDialogue] = useState(false);
 
   const BASE_URL = import.meta.env.PUBLIC_STRAPI_BASE_URL;
 
-  // Logs iniciales (Agregamos whiteboardData para depurar)
-  useEffect(() => {
-    console.log("AboutMeData recibido:", aboutMeData);
-    console.log("ProjectsData recibido:", projectsData);
-    console.log("SectionsData recibido:", sectionsData);
-    console.log("WhiteboardData recibido:", whiteboardData);
-  }, [aboutMeData, projectsData, sectionsData, whiteboardData]);
+  // --- LOGICA DE DATOS ---
+  // Transformamos los datos complejos de Strapi a una lista simple de textos
+  const dialogueLines = introDialogues && introDialogues.length > 0
+    ? introDialogues.map(d => d.attributes.message)
+    : [
+        // Texto de respaldo por si Strapi falla
+        "¡Hola! 👋 Bienvenido a mi portfolio.",
+        "Soy Desarrolladora Full Stack.",
+        "Explora la habitación para ver mis proyectos."
+      ];
 
-  // Detecta interacciones con objetos
+  // --- DETECTOR DE INTERACCIONES (Eventos del Juego) ---
   useEffect(() => {
     const handleInteraction = (event) => {
       const { type } = event.detail;
@@ -33,51 +50,56 @@ export default function WindowController({ aboutMeData, projectsData, sectionsDa
         setShowPcScreen(true);
         setActiveInteraction(null);
         setSelectedProject(null);
-      } else {
-        // Aquí entrará type === "whiteboard"
+        setShowDialogue(false); // Cierra diálogo si abres PC
+      } 
+      //  DETECTAR CLICK EN PERSONAJE
+      else if (type === "character") {
+        setShowDialogue(true);
+        setShowPcScreen(false);
+        setActiveInteraction(null);
+      } 
+      else {
+        // Para Whiteboard u otros objetos
         setActiveInteraction(type);
         setShowPcScreen(false);
         setSelectedProject(null);
+        setShowDialogue(false);
       }
     };
+    
     document.addEventListener("object-interacted", handleInteraction);
-    return () =>
-      document.removeEventListener("object-interacted", handleInteraction);
+    return () => document.removeEventListener("object-interacted", handleInteraction);
   }, []);
 
-  // Cierra ventanas "virtuales" y vuelve a la PC
+  // --- FUNCIONES DE CIERRE ---
   const closeWindow = () => {
-    console.log("Cerrando ventana general");
     setActiveInteraction(null);
     setSelectedProject(null);
-    setShowPcScreen(true);
+    // IMPORTANTE: Al cerrar una ventana interna, volvemos a ver la PC (si estábamos en ella)
+    // Pero como IconWindow tiene fondo transparente ahora, la PC siempre se ve de fondo.
+    // Mantenemos showPcScreen true.
   };
 
-  // NUEVO: Cierra objetos "físicos" (como el Pizarrón) y vuelve al juego/habitación
   const closeDirectInteraction = () => {
-    console.log("Cerrando interacción física");
-    setActiveInteraction(null); // Vuelve a null (se ve el juego de fondo)
-    setShowPcScreen(false);     // Asegura que la PC no salte
+    setActiveInteraction(null);
+    setShowPcScreen(false);
   };
 
   const closePcScreen = () => {
-    console.log("Cerrando pantalla PC");
     setShowPcScreen(false);
     setActiveInteraction(null);
     setSelectedProject(null);
   };
 
   const openProject = (project) => {
-    console.log("Proyecto seleccionado:", project);
     setSelectedProject(project);
   };
 
   const closeProjectDetail = () => {
-    console.log("Cerrando detalle de proyecto");
     setSelectedProject(null);
   };
 
-  // Mapa de ventanas (Strategy Pattern)
+  // --- MAPA DE VENTANAS (Contenido de la PC) ---
   const windowMap = {
     aboutme: (
       <AboutMeDetail
@@ -95,35 +117,42 @@ export default function WindowController({ aboutMeData, projectsData, sectionsDa
         />
       </IconWindow>
     ),
-    // 3. NUEVA ENTRADA: El Pizarrón
-    // Usamos 'whiteboard' porque ese es el "type" que pusiste en el polígono
+    // Objetos físicos fuera de la PC
     whiteboard: (
       <Whiteboard 
-        items={whiteboardData}    // Pasamos los datos de Strapi
-        baseUrl={BASE_URL}        // Para armar la URL de las imágenes
-        onClose={closeDirectInteraction} // Usamos la nueva función de cerrar
+        items={whiteboardData} 
+        baseUrl={BASE_URL} 
+        onClose={closeDirectInteraction} 
       />
-    )
+    ),
+    contact: (
+        <ContactMe 
+          aboutMeData={aboutMeData} 
+          onClose={closeWindow} 
+        />
+      )
   };
 
   return (
     <>
-      {/* Pantalla PC */}
+      {/*  PANTALLA PC (MONITOR GIGANTE) */}
       {showPcScreen && (
         <div className="screen-overlay" onClick={closePcScreen}>
           <div
             className="screen-content"
             onClick={(e) => e.stopPropagation()}
           >
-            <PcComponent onNavigate={setActiveInteraction} />
+            <PcComponent onNavigate={setActiveInteraction} closePc={closePcScreen}/>
           </div>
+          {/* USARLO AQUÍ (Fuera del screen-content pero dentro del overlay) */}
+          <ExitHint />
         </div>
       )}
 
-      {/* Ventana activa (Aquí se pintará el Whiteboard si type es 'whiteboard') */}
+      {/* VENTANAS FLOTANTES (Dentro de la PC o Whiteboard) */}
       {!selectedProject && activeInteraction && windowMap[activeInteraction]}
 
-      {/* Ventana de detalle de proyecto */}
+      {/* DETALLE DE PROYECTO (Nivel más profundo) */}
       {selectedProject && (
         <ProjectDetail
           project={selectedProject}
@@ -131,6 +160,14 @@ export default function WindowController({ aboutMeData, projectsData, sectionsDa
           onClose={closeProjectDetail}
         />
       )}
+
+      {/*  CAJA DE DIÁLOGO (RPG STYLE)  */}
+      {/* Se muestra solo si showDialogue es true (click en personaje) */}
+      <DialogueBox 
+        isOpen={showDialogue} 
+        onClose={() => setShowDialogue(false)} 
+        messages={dialogueLines}
+      />
     </>
   );
 }
