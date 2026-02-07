@@ -1,5 +1,7 @@
+/* src/layouts/iconwindow/IconWindow.css */
+
 .iconwindow-overlay {
-  display: none; /* Oculto por defecto */
+  display: none; 
   position: fixed;
   top: 0;
   left: 0;
@@ -7,8 +9,12 @@
   height: 100%;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
-  background: rgba(0, 0, 0, 0.5);
+  
+  /*  Z-Index muy alto para estar sobre la barra de tareas */
+  z-index: 5000; 
+  
+  /*  Transparente (quitamos el negro) para ver la PC detrás */
+  background: transparent; 
 }
 
 .iconwindow-overlay.show {
@@ -17,49 +23,94 @@
 
 .iconwindow-content {
   position: fixed;
-  top: 50%;
+  top: 50%; /* Centrado en la pantalla real */
   left: 50%;
-  width: 1000px;   /* ancho fijo en px */
-  height: 600px;  /* altura fija en px */
-  transform: translate(-50%, -50%); /* centrado perfecto */
+  transform: translate(-50%, -50%);
   
-  background: #f595ba;
-  border-radius: 8px;
-  border: 4px solid #b6436f;
-  box-shadow: 0 0 0 4px #330825;
+  /* Tamaño un poco más chico que el monitor (1200x750) para que "quepa" dentro */
+  width: 950px;  
+  height: 600px;
+  
+  /* Topes para pantallas chicas */
+  max-width: 90vw;
+  max-height: 80vh;
+
+  /* ESTILO PIXEL ART (PINK OS) */
+  background: #fce4ec; /* Fondo interior claro */
+  border-radius: 0;    /* CERO REDONDEO */
+  
+  /* Borde 3D Rosado */
+  border-top: 4px solid #fff;      /* Luz arriba */
+  border-left: 4px solid #fff;     /* Luz izquierda */
+  border-right: 4px solid #ad1457; /* Sombra derecha */
+  border-bottom: 4px solid #ad1457;/* Sombra abajo */
+  
+  /* Sombra dura proyectada sobre el escritorio */
+  /*box-shadow: 10px 10px 0 rgba(0,0,0,0.2);*/
+  
   overflow: hidden;
-  image-rendering: pixelated;
+  display: flex;
+  flex-direction: column;
   
+  /* Importante para heredar fuente pixelada */
+  font-family: inherit;
 }
 
+/* LA BARRA DE TÍTULO DE LA VENTANA */
 .iconwindow-header {
-  background: #f06292;
+  /* Gradiente estilo Windows 98 pero Rosa */
+  background: linear-gradient(to right, #ec407a, #ad1457); 
   color: #ffffff;
-  padding: 10px;
+  padding: 6px 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-bottom: 2px solid #ad1457;
 }
 
 .iconwindow-title {
-  font-family: 'Press Start 2P', cursive;
-  font-size: 18px;
+  /* Asegúrate de que esta fuente esté importada o usa inherit */
+  font-family: inherit; 
+  font-size: 1.1rem;
   margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 0 #000; /* Texto legible */
 }
 
+/* BOTÓN DE CERRAR [X] */
 .iconwindow-close-button {
-  background: transparent;
-  border: none;
-  color: #cebec6;
-  font-size: 18px;
+  background: #c0c0c0;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  color: #000;
+  font-size: 14px;
+  font-weight: bold;
   cursor: pointer;
-  font-family: 'Press Start 2P', cursive;
+  font-family: inherit;
+  width: 24px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.iconwindow-close-button:active {
+  border-top: 2px solid #000;
+  border-left: 2px solid #000;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: translate(1px, 1px);
 }
 
 .iconwindow-body {
-  padding: 10px;
-  overflow: auto;
-  height: calc(100% - 40px);
+  padding: 0; /* Quitamos padding contenedor para tener control total */
+  overflow: hidden; /* El scroll lo manejan los hijos */
+  flex: 1;
   display: flex;
   flex-direction: column;
+  background-color: #fff0f5; /* Fondo del contenido muy clarito */
 }
