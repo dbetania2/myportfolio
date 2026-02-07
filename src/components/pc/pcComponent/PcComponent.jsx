@@ -5,12 +5,16 @@ import './PcComponent.css';
 
 
 // componente que representa la estructura principal de la pc
-const PcComponent = ({ onNavigate }) => {
+const PcComponent = ({ onNavigate, closePc }) => {
  // el contenedor principal de la pc
  return (
    <div className="pc-container">
      {/* el componente que muestra la pantalla de la pc y maneja la navegacion */}
-     <PcScreen onNavigate={onNavigate} />
+     <PcScreen onNavigate={onNavigate} 
+     closePc={closePc}
+      
+     />
+     
    </div>
  );
 };

@@ -1,74 +1,100 @@
 // src/components/pc/pcScreen/PcScreen.jsx
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './PcScreen.css';
 
-// componente que representa la pantalla de escritorio de la pc
-const PcScreen = ({ onNavigate }) => {
-  // arreglo de objetos que define los iconos del escritorio
-  const icons = [
-    { 
-      name: 'aboutme', 
-      alt: 'Información sobre mí', 
-      src: '/src/objetos-img/archivospc/aboutme.png',
-      label: 'SobreMi.lnk'
-    },
-    { 
-      name: 'projects', 
-      alt: 'Mis Proyectos', 
-      src: '/src/objetos-img/archivospc/aboutme.png',//cambiar nombre del icono a general
-      label: 'Proyectos.lnk'
-    },
-    
+// Recibimos 'closePc' como prop (necesitarás pasarlo desde WindowController)
+const PcScreen = ({ onNavigate, closePc }) => {
+  const [time, setTime] = useState(new Date());
+  
+  //  Estado para mostrar/ocultar el menú inicio
+  const [showStartMenu, setShowStartMenu] = useState(false);
 
+  useEffect(() => {
+    const timer = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatTime = (date) => {
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
+
+  const icons = [
+    // iconos
+    { name: 'aboutme', label: 'SobreMi.txt', src: '/src/objetos-img/archivospc/aboutme.png' },
+    { name: 'projects', label: 'Proyectos_Dir', src: '/src/objetos-img/archivospc/aboutme.png' },
+    { name: 'contact', label: 'Mail_Me.exe', src: '/src/objetos-img/archivospc/aboutme.png' }
   ];
 
+  // Función para manejar clicks del menú
+  const handleMenuClick = (action) => {
+    setShowStartMenu(false); // Cerrar menú siempre
+    
+    if (action === 'shutdown') {
+      if (closePc) closePc(); // Llamar a la función de cerrar si existe
+    } else {
+      onNavigate(action);
+    }
+  };
+
   return (
-    // contenedor principal de la pantalla de escritorio
-    <div className="pc-screen-content">
-      {/* titulo del escritorio */}
-      <h2 style={{color: 'white', marginBottom: '20px'}}>Daiana pc :D</h2>
-      
-      {/* contenedor de los iconos del escritorio */}
-      <div style={{display: 'flex', gap: '30px', flexWrap: 'wrap'}}>
-        {/* se mapea el arreglo de iconos para renderizar cada uno */}
-        {icons.map(icon => (
-          // contenedor de un solo icono y su etiqueta
-          <div key={icon.name} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-            {/* boton que actua como icono y maneja el evento de clic */}
-            <button
-              className="screen-icon"
-              // al hacer clic, se llama a la funcion onNavigate con el nombre del icono
-              onClick={() => {
-                if (onNavigate) {
-                  onNavigate(icon.name);
-                }
+    <div className="monitor-casing" onClick={() => setShowStartMenu(false)}>
+      <div className="crt-screen">
+        
+        {/* Escritorio */}
+        <div className="desktop-area">
+          {icons.map(icon => (
+            <div 
+              key={icon.name} 
+              className="desktop-icon-wrapper"
+              onClick={(e) => {
+                e.stopPropagation(); // Evita cerrar el menú si clickeas un icono
+                onNavigate(icon.name);
               }}
             >
-              {/* imagen del icono */}
-              <img 
-                src={icon.src} 
-                alt={icon.alt}
-                // el ancho y alto se ajustan a la imagen
-                style={{width: '64px', height: '64px'}}
-              />
-            </button>
-            {/* etiqueta de texto para el icono */}
-            <span style={{color: 'white', marginTop: '10px', fontSize: '12px'}}>
-              {icon.label}
-            </span>
-          </div>
-        ))}
-      </div>
-
-
-      {/* boton y barra de tareas */}
-      <div className="power-button"></div>
-      <div className="taskbar">
-        <div className="taskbar-left">
-          <button className="start-button">Inicio</button>
+              <div className="icon-img-box">
+                <img src={icon.src} alt={icon.label} />
+              </div>
+              <span className="icon-label">{icon.label}</span>
+            </div>
+          ))}
         </div>
+
+        {/* === MENÚ INICIO (START MENU) === */}
+        {showStartMenu && (
+          <div className="start-menu" onClick={(e) => e.stopPropagation()}>
+            <div className="start-sidebar">
+              <span className="vertical-text">DAIANA</span>
+            </div>
+            <div className="start-options">
+              <button onClick={() => handleMenuClick('aboutme')}>📂 Sobre Mí</button>
+              <button onClick={() => handleMenuClick('projects')}>🚀 Proyectos</button>
+              <button onClick={() => handleMenuClick('contact')}>📧 Contacto</button>
+              <div className="menu-divider"></div>
+              <button onClick={() => handleMenuClick('shutdown')}>🛑 Apagar Sistema</button>
+            </div>
+          </div>
+        )}
+
+        {/* Barra de Tareas */}
+        <div className="taskbar" onClick={(e) => e.stopPropagation()}>
+          <button 
+            className={`start-btn ${showStartMenu ? 'active' : ''}`}
+            onClick={() => setShowStartMenu(!showStartMenu)}
+          >
+            <span className="heart-icon">♥</span> INICIO
+          </button>
+          
+          <div className="taskbar-divider"></div>
+
+          <div className="taskbar-tray">
+             <span className="tray-time">{formatTime(time)}</span>
+          </div>
+        </div>
+
       </div>
+      <div className="monitor-logo">DAIANA-OS</div>
+      <div className="power-indicator"></div>
     </div>
   );
 };
