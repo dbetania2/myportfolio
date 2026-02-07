@@ -1,16 +1,25 @@
+/* src/components/sections/aboutme/AboutMeDetail.css */
+
 /* Contenedor principal */
 .about-me-page {
   max-width: 900px;
   margin: 0 auto;
-  padding: 20px;
+  
   background: linear-gradient(135deg, #fff, #ffe6f0);
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  font-family: 'Press Start 2P', cursive;
+  font-family: 'Press Start 2P', cursive; /* O inherit si prefieres la del sistema */
+  
   display: flex;
   flex-direction: column;
   gap: 20px;
   position: relative;
+
+  /*ACTIVACIÓN DE SCROLL  */
+  height: 100%;      
+  overflow-y: auto;  
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 /* BLOQUE SUPERIOR */
@@ -28,6 +37,8 @@
   max-width: 250px;
   border-radius: 8px;
   object-fit: cover;
+  border: 4px solid #fff; /* Marco tipo foto */
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
 }
 
 .pixel-hover {
@@ -50,27 +61,21 @@
   gap: 0.5rem;
 }
 
-/* Nombre con efecto neón suave */
+/* Nombre */
 .about-me-name {
-  font-size: 36px;
+  font-size: 32px; /* Ajustado para que quepa mejor */
   color: #e75480;
   margin: 0;
-  text-shadow: 0 0 4px #ff99bb, 0 0 8px #e75480;
-  animation: neon-flicker 6s infinite alternate;
-}
-
-@keyframes neon-flicker {
-  0%, 90%, 100% { opacity: 1; text-shadow: 0 0 6px #ff99bb, 0 0 12px #e75480; }
-  92% { opacity: 0.6; text-shadow: none; }
-  95% { opacity: 0.8; text-shadow: 0 0 3px #ff99bb; }
+  text-shadow: 2px 2px 0 #fff; /* Sombra sólida para legibilidad */
 }
 
 /* Contacto + redes */
 .contact-social {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem;
+  gap: 10px; /* Un poco más de espacio */
   font-size: 14px;
+  margin-top: 10px;
 }
 
 .contact-social span {
@@ -78,9 +83,10 @@
 }
 
 .contact-social a {
-  color: #444;
+  color: #330825;
   text-decoration: none;
   position: relative;
+  font-weight: bold;
 }
 
 .contact-social a::after {
@@ -98,7 +104,7 @@
   width: 100%;
 }
 
-/* BIOGRAFÍA NUEVA (con posiciones) */
+/* BIOGRAFÍA NUEVA */
 .bio-block {
   display: flex;
   align-items: stretch;
@@ -108,32 +114,31 @@
 
 .bio-block p {
   flex: 1;
-  display: block; /* cambiar de flex a block */
+  display: block;
   margin: 0;
   color: #330825;
   line-height: 1.6;
   text-align: justify;
+  font-size: 0.9rem; /* Ajuste para lectura */
 }
-
 
 /* Marco polaroid */
 .side-image {
   background: #fff;
   padding: 10px 10px 25px 10px;
   border: 1px solid #ddd;
-  box-shadow: 2px 4px 10px rgba(0,0,0,0.2);
-  border-radius: 8px;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.1); /* Sombra pixel */
+  border-radius: 2px; /* Menos radio para que parezca más papel */
   object-fit: cover;
   max-width: 300px;
   max-height: 250px;
 }
 
-/* Posiciones dinámicas */
+/* Posiciones dinámicas (Responsive simple) */
 .position-left { flex-direction: row; }
 .position-right { flex-direction: row-reverse; }
 .position-top { flex-direction: column; text-align: center; }
 .position-bottom { flex-direction: column-reverse; text-align: center; }
-.position-none { flex-direction: column; }
 
 .position-left .side-image,
 .position-right .side-image {
@@ -142,42 +147,25 @@
 
 .position-top .side-image,
 .position-bottom .side-image {
-  width: 50%;
-  margin: 0 auto;
-}
-
-/* BIO contenedor */
-.about-me-bio {
-  padding: 15px;
-  border-radius: 8px;
-  word-break: break-word;
-}
-
-/* Fade-in retro */
-.fade-in {
-  opacity: 0;
-  transform: translateY(10px);
-  animation: fadeInUp 0.8s ease forwards;
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  width: 60%;
+  margin: 0 auto 15px auto;
 }
 
 /* SKILLS */
 .about-me-skills {
   background: #fff0f5;
-  padding: 15px;
+  padding: 20px;
   border-radius: 8px;
   border: 2px solid #e75480;
+  margin-bottom: 20px; /* Margen final para poder scrollear hasta el fondo */
 }
 
 .about-me-skills h2 {
   margin-top: 0;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   color: #e75480;
   font-size: 18px;
+  text-transform: uppercase;
 }
 
 .about-me-skills ul {
@@ -190,15 +178,34 @@
 
 .about-me-skills li {
   background: #ffe6f0;
-  padding: 6px 12px;
-  border-radius: 6px;
+  padding: 8px 12px;
+  border-radius: 4px;
   border: 2px solid #e75480;
   font-size: 12px;
   color: #330825;
   transition: transform 0.2s ease, background 0.3s ease;
+  cursor: default;
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.1);
 }
 
 .about-me-skills li:hover {
-  transform: translateY(-3px) scale(1.05);
+  transform: translateY(-2px);
   background: #ffcce0;
+}
+
+/* Media Query para móviles dentro de la ventana */
+@media (max-width: 700px) {
+  .about-me-header-top {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .bio-block {
+    flex-direction: column !important; /* Forza columna en móvil */
+  }
+  
+  .side-image {
+    width: 80% !important;
+    margin: 10px auto;
+  }
 }

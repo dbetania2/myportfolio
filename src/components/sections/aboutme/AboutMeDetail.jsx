@@ -42,19 +42,10 @@ export default function AboutMeDetail({ data, baseUrl, onClose }) {
                 {name}
               </h1>
             )}
-            <div className="contact-social">
-              {contact_mail && <a href={`mailto:${contact_mail}`}>{contact_mail}</a>}
-              {SocialLink &&
-                SocialLink.length > 0 &&
-                SocialLink.map((link) => (
-                  <React.Fragment key={link.id}>
-                    <span> | </span>
-                    <a href={link.platform_url} target="_blank" rel="noopener noreferrer">
-                      {link.platform}
-                    </a>
-                  </React.Fragment>
-                ))}
-            </div>
+            
+
+
+            
           </div>
         </div>
 
