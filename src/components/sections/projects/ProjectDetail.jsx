@@ -19,7 +19,7 @@ export default function ProjectDetail({ project, baseUrl, onClose }) {
 
   return (
     <IconWindow title={attrs.title} onClose={onClose}>
-      <div className="project-detail-page">
+      <div className="project-detail-page">s
         {/* Imagen principal */}
         {mainImageUrl ? (
           <img
