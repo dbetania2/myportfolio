@@ -1,13 +1,14 @@
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import './Whiteboard.css';
+import ExitHint from '../../ui/ExitHint.jsx';
 
 export default function Whiteboard({ items = [], onClose, baseUrl }) {
   
-  // 🔥 NUEVO: Estado ahora guarda { type: 'image'|'note', index: 0 }
+  // Estado ahora guarda { type: 'image'|'note', index: 0 }
   const [focusedItem, setFocusedItem] = useState(null);
   const [zoomLevel, setZoomLevel] = useState(1);
 
-  // 1. Procesamos los items y agregamos posiciones
+  // Procesamos los items y agregamos posiciones
   const processedItems = useMemo(() => {
     const safeItems = items || [];
     const pinColors = ['#4caf50', '#e53935', '#ffeb3b'];
@@ -26,7 +27,7 @@ export default function Whiteboard({ items = [], onClose, baseUrl }) {
     });
   }, [items]);
 
-  // 🔥 NUEVO: Filtramos listas separadas para poder navegar
+  //  Filtramos listas separadas para poder navegar
   const imagesList = useMemo(() => processedItems.filter(i => i.attributes.type === 'image'), [processedItems]);
   const notesList = useMemo(() => processedItems.filter(i => i.attributes.type === 'note'), [processedItems]);
 
@@ -45,7 +46,7 @@ export default function Whiteboard({ items = [], onClose, baseUrl }) {
     return `${cleanBaseUrl}${imagePath}`;
   };
 
-  // 🔥 NUEVO: Función para abrir un ítem específico
+  //  Función para abrir un ítem específico
   const openItem = (item) => {
     const type = item.attributes.type;
     const list = type === 'image' ? imagesList : notesList;
@@ -56,7 +57,7 @@ export default function Whiteboard({ items = [], onClose, baseUrl }) {
     setFocusedItem({ type, index, data: list[index] });
   };
 
-  // 🔥 NUEVO: Lógica de navegación (Siguiente / Anterior)
+  //  Lógica de navegación (Siguiente / Anterior)
   const navigate = useCallback((direction) => {
     if (!focusedItem) return;
 
@@ -75,7 +76,7 @@ export default function Whiteboard({ items = [], onClose, baseUrl }) {
     });
   }, [focusedItem, imagesList, notesList]);
 
-  // 🔥 NUEVO: Escuchar teclas del teclado (Flechas)
+  // Escuchar teclas del teclado (Flechas)
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (!focusedItem) return;
@@ -135,7 +136,7 @@ export default function Whiteboard({ items = [], onClose, baseUrl }) {
             </>
           )}
 
-          {/* CASO 2: ES UNA NOTA (🔥 NUEVO) */}
+          {/* CASO 2: ES UNA NOTA  */}
           {focusedItem.type === 'note' && (
             <div 
               className="lightbox-note-container" 
@@ -152,12 +153,13 @@ export default function Whiteboard({ items = [], onClose, baseUrl }) {
             </div>
           )}
 
-          <p className="lightbox-hint">Click fuera o ESC para cerrar</p>
+          <ExitHint />
         </div>
       )}
 
       {/* === PIZARRÓN (FONDO) === */}
       <div className="whiteboard-overlay" onClick={onClose}>
+          <ExitHint />
         <div className="whiteboard-container" onClick={(e) => e.stopPropagation()}>
           <button className="close-board-btn" onClick={onClose}>X</button>
           <h2 className="board-title">Ideas</h2>
@@ -177,7 +179,7 @@ export default function Whiteboard({ items = [], onClose, baseUrl }) {
                   className={`sticky-note type-${type} clickable-image`} // Agregamos clickable a TODO
                   style={item.style}
                   title={title}
-                  // 🔥 NUEVO: Al hacer click, llamamos a openItem
+                  //  Al hacer click, llamamos a openItem
                   onClick={(e) => { 
                     e.stopPropagation(); 
                     openItem(item); 
