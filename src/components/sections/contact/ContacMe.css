@@ -1,0 +1,229 @@
+/* src/components/sections/contact/ContactMe.css */
+
+.contact-layout {
+  display: flex;
+  gap: 15px;
+  height: 100%;
+  
+  /* Heredamos la fuente pixelada */
+  font-family: inherit; 
+  
+  /* ⬇️ CAMBIO: Reduje el tamaño base para que no se vea tan enorme */
+  font-size: 0.9rem; 
+  color: #555;
+}
+
+/* --- BARRA LATERAL (IZQUIERDA) --- */
+.contact-sidebar {
+  width: 30%;
+  background: #fff0f5; /* Rosa muy clarito de fondo (LavenderBlush) */
+  border-right: 2px solid #d81b60; /* ⬇️ Borde Rosa Oscuro */
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Títulos de secciones (ej: MIS REDES) */
+.contact-sidebar h3 {
+  margin-top: 0;
+  border-bottom: 2px dashed #ff80ab; /* Línea rosa pastel */
+  padding-bottom: 5px;
+  font-size: 1.1rem; /* Más pequeño */
+  color: #880e4f; /* Rosa muy oscuro */
+}
+
+/* --- PERFIL HEADER (NOMBRE Y ROL) --- */
+.profile-header {
+  margin-bottom: 10px;
+}
+
+.profile-name {
+  margin: 0;
+  font-size: 1.3rem; /* Tamaño ajustado */
+  color: #d81b60;    /* ⬇️ NOMBRE EN ROSA FUERTE */
+  text-transform: uppercase;
+  line-height: 1;
+  text-shadow: 1px 1px 0 #fff;
+}
+
+.profile-role {
+  margin: 2px 0 0 0;
+  font-size: 0.85rem;
+  color: #ad1457; /* Rosa medio */
+  font-style: italic;
+}
+
+.separator-line {
+  border-bottom: 2px dashed #ff4081; /* Rosa vibrante */
+  margin: 12px 0;
+  width: 100%;
+}
+
+/* --- REDES SOCIALES --- */
+.social-links-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.social-links-list li {
+  margin-bottom: 8px;
+}
+
+.social-links-list a {
+  text-decoration: none;
+  color: #d81b60; /* ⬇️ LINKS EN ROSA */
+  font-weight: bold;
+  display: block;
+  padding: 4px;
+  border: 1px dotted transparent;
+  image-rendering: pixelated;
+  transition: all 0.2s;
+}
+
+.social-links-list a:hover {
+  background-color: #fce4ec; /* Fondo rosa pastel al pasar mouse */
+  border: 1px dotted #d81b60;
+  color: #880e4f;
+}
+
+.direct-email-box {
+  margin-top: auto;
+  border-top: 2px solid #ff80ab;
+  padding-top: 10px;
+  font-size: 0.8rem;
+  word-break: break-all;
+  color: #ad1457;
+}
+
+/* --- FORMULARIO (DERECHA) --- */
+.contact-main {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto; 
+}
+
+.contact-main h3 {
+  margin-top: 0;
+  color: #880e4f; /* Título en rosa oscuro */
+  border-bottom: 2px solid #ffc1e3;
+  padding-bottom: 8px;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.pixel-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-row label {
+  font-weight: bold;
+  margin-bottom: 4px;
+  font-size: 0.9rem;
+  color: #d81b60; /* Etiquetas en rosa */
+}
+
+/* INPUTS Y TEXTAREA */
+.form-row input,
+.form-row textarea {
+  border: 2px solid #f48fb1; /* ⬇️ Borde de inputs: Rosa Pastel Oscuro */
+  background: #fff;
+  padding: 8px;
+  
+  font-family: inherit; 
+  font-size: 0.95rem; /* Letra más chica al escribir */
+  
+  box-shadow: inset 2px 2px 0 #ffebee; /* Sombra interna muy suave */
+  color: #4a4a4a;
+}
+
+.form-row input:focus,
+.form-row textarea:focus {
+  outline: none;
+  border-color: #d81b60; /* Borde rosa fuerte al escribir */
+  background: #fff0f5;   /* Fondo apenas rosado */
+}
+
+/* BOTÓN DE ENVIAR */
+button[type="submit"] {
+  align-self: flex-start;
+  background: #fce4ec; /* Fondo claro */
+  border: 2px solid #d81b60; /* Borde rosa fuerte */
+  padding: 8px 20px;
+  cursor: pointer;
+  font-weight: bold;
+  font-family: inherit;
+  font-size: 1rem;
+  margin-top: 8px;
+  color: #d81b60; /* Texto rosa */
+  box-shadow: 3px 3px 0 #f8bbd0; /* Sombra sólida rosa claro */
+  transition: transform 0.1s;
+}
+
+button[type="submit"]:hover {
+  background: #f8bbd0;
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 #f48fb1;
+}
+
+button[type="submit"]:active {
+  transform: translate(3px, 3px);
+  box-shadow: none;
+}
+
+button[type="submit"]:disabled {
+  background: #eee;
+  border-color: #aaa;
+  color: #999;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* Mensajes de estado */
+.success-msg {
+  background: #fce4ec;
+  color: #d81b60;
+  padding: 20px;
+  border: 2px solid #f06292;
+  text-align: center;
+  font-family: inherit;
+  border-radius: 4px; /* Un poquitito redondeado o cuadrado según prefieras */
+}
+
+.success-msg button {
+    font-family: inherit;
+    padding: 5px 15px;
+    margin-top: 10px;
+    cursor: pointer;
+    background: #fff;
+    border: 1px solid #d81b60;
+    color: #d81b60;
+}
+
+.error-text {
+  color: #d32f2f; /* Rojo error standard */
+  font-weight: bold;
+  margin-top: 10px;
+  font-size: 0.85rem;
+}
+
+/* Móvil */
+@media (max-width: 600px) {
+  .contact-layout {
+    flex-direction: column;
+    gap: 0;
+  }
+  .contact-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 2px solid #d81b60;
+    height: auto;
+  }
+}
