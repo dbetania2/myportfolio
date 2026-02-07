@@ -1,0 +1,32 @@
+.exit-hint-container {
+  position: absolute;
+  bottom: 30px; /* Separado del borde inferior */
+  left: 50%;
+  transform: translateX(-50%); /* Centrado perfecto */
+  
+  background-color: rgba(0, 0, 0, 0.6); /* Fondo semitransparente */
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px; /* Redondeado tipo píldora */
+  
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  font-family: 'Press Start 2P', cursive; /* O fuente pixelada */
+  font-size: 0.7rem;
+  pointer-events: none; /* Importante: para que el click "pase" a través de él */
+  z-index: 10000; /* Siempre encima */
+  
+  /* Animación suave para llamar la atención */
+  animation: floatHint 2s infinite ease-in-out;
+}
+
+.exit-hint-icon {
+  font-size: 1rem;
+}
+
+@keyframes floatHint {
+  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.8; }
+  50% { transform: translateX(-50%) translateY(-5px); opacity: 1; }
+}
