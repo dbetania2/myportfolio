@@ -144,8 +144,8 @@ export default function WindowController({
           >
             <PcComponent onNavigate={setActiveInteraction} closePc={closePcScreen}/>
           </div>
-          {/* USARLO AQUÍ (Fuera del screen-content pero dentro del overlay) */}
-          <ExitHint />
+          {/* Solo mostrar la pista si NO hay ventanas abiertas ni proyectos seleccionados */}
+          {!activeInteraction && !selectedProject && <ExitHint />}
         </div>
       )}
 
