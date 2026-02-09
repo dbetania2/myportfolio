@@ -28,6 +28,8 @@ export interface Skill {
   id: number;
   attributes: {
     name: string;
+    type?: string; 
+    skill_image?: StrapiImage; 
   };
 }
 
@@ -70,9 +72,16 @@ export interface ProjectAttributes {
   github_url?: string;
   project_url?: string;
   featured_image?: StrapiImage;
+  
   tags?: {
     data: Tag[];
   };
+  
+  // 🔥 AGREGADO: La relación con Skills
+  skills?: {
+    data: Skill[];
+  };
+
   gallery?: {
     data: StrapiImage['data'][];
   };
@@ -90,9 +99,7 @@ export interface WhiteboardItemAttributes {
   image?: StrapiImage;    
 }
 
-// ==========================================
-// [NUEVO] INTERFAZ PARA DIÁLOGOS (GAME SCRIPTS)
-// ==========================================
+// INTERFAZ PARA DIÁLOGOS
 export interface GameDialogAttributes {
   section: string;
   speaker: string;
@@ -110,13 +117,13 @@ export async function getPortfolioData() {
   const API_URL = import.meta.env.PUBLIC_STRAPI_API_URL;
 
   try {
-    //Peticiones en paralelo 
+    // 
     const [resAbout, resProjects, resSections, resWhiteboard, resDialogues] = await Promise.all([
       fetch(`${API_URL}/about-me?populate=profile_picture,SocialLink,skills,biography_blocks,biography_blocks.image`),
-      fetch(`${API_URL}/projects?populate=featured_image,tags,gallery`),
+      
+      fetch(`${API_URL}/projects?populate=featured_image,tags,gallery,skills.skill_image`),      
       fetch(`${API_URL}/project-sections?populate=tags`),
       fetch(`${API_URL}/whiteboard-items?populate=image`),
-      // Fetch de diálogos (filtrados por intro y ordenados)
       fetch(`${API_URL}/game-dialogs?filters[section][$eq]=intro&sort=order:asc`)
     ]);
 
@@ -125,7 +132,7 @@ export async function getPortfolioData() {
     const projectsJson = resProjects.ok ? await resProjects.json() : null;
     const sectionsJson = resSections.ok ? await resSections.json() : null;
     const whiteboardJson = resWhiteboard.ok ? await resWhiteboard.json() : null;
-    const dialoguesJson = resDialogues.ok ? await resDialogues.json() : null; // [NUEVO]
+    const dialoguesJson = resDialogues.ok ? await resDialogues.json() : null;
 
     // Retorno normalizado
     return {
@@ -143,7 +150,6 @@ export async function getPortfolioData() {
         ? whiteboardJson.data
         : []) as { id: number; attributes: WhiteboardItemAttributes }[],
 
-      //  Retorno de diálogos
       introDialogues: (Array.isArray(dialoguesJson?.data)
         ? dialoguesJson.data
         : []) as { id: number; attributes: GameDialogAttributes }[]
@@ -151,13 +157,12 @@ export async function getPortfolioData() {
 
   } catch (error) {
     console.error("Error crítico obteniendo datos de Strapi:", error);
-    // Retorno defensivo
     return { 
       aboutMe: null, 
       projects: [], 
       sections: [],
       whiteboardItems: [],
-      introDialogues: [] // [NUEVO]
+      introDialogues: []
     };
   }
 }
