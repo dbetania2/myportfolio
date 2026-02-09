@@ -8,20 +8,12 @@ export default function ProjectsContent({
   sections = [],
   onSelectProject,
 }) {
-  // Guard clause clara y segura
   if (!Array.isArray(projectsData) || projectsData.length === 0) {
     return <p>No hay proyectos disponibles</p>;
   }
 
   const baseUrl = import.meta.env.PUBLIC_STRAPI_BASE_URL;
 
-  /**
-   * ============================
-   * AGRUPACIÓN POR SECCIONES
-   * ============================
-   * - Si hay secciones: agrupamos
-   * - Si no: todo cae en "Todos"
-   */
   const projectsBySection = useMemo(() => {
     if (Array.isArray(sections) && sections.length > 0) {
       return groupProjectsBySection(sections, projectsData);
@@ -29,26 +21,12 @@ export default function ProjectsContent({
     return { Todos: projectsData };
   }, [sections, projectsData]);
 
-  /**
-   * ============================
-   * ESTADO DE TAG ACTIVO
-   * ============================
-   */
   const [selectedTag, setSelectedTag] = useState("Todos");
 
-  /**
-   * ============================
-   * TAGS ÚNICOS (DEFENSIVO)
-   * ============================
-   * Nunca asumimos que tags existen
-   */
   const activeTags = useMemo(() => {
     const tagsSet = new Set();
-
     projectsData.forEach((project) => {
-      const tagsData =
-        project?.attributes?.tags?.data;
-
+      const tagsData = project?.attributes?.tags?.data;
       if (Array.isArray(tagsData)) {
         tagsData.forEach((tag) => {
           const tagName = tag?.attributes?.name;
@@ -56,55 +34,36 @@ export default function ProjectsContent({
         });
       }
     });
-
     return ["Todos", ...Array.from(tagsSet)];
   }, [projectsData]);
 
-  /**
-   * ============================
-   * FILTRADO POR TAG
-   * ============================
-   */
   const filteredProjectsBySection = useMemo(() => {
     const result = {};
-
     Object.entries(projectsBySection).forEach(
       ([sectionName, projects]) => {
         result[sectionName] =
           selectedTag === "Todos"
             ? projects
             : projects.filter((project) => {
-                const tagsData =
-                  project?.attributes?.tags?.data;
-
+                const tagsData = project?.attributes?.tags?.data;
                 if (!Array.isArray(tagsData)) return false;
-
                 return tagsData.some(
-                  (tag) =>
-                    tag?.attributes?.name === selectedTag
+                  (tag) => tag?.attributes?.name === selectedTag
                 );
               });
       }
     );
-
     return result;
   }, [projectsBySection, selectedTag]);
 
-  /**
-   * ============================
-   * RENDER
-   * ============================
-   */
   return (
     <section className="projects-grid" aria-label="Listado de proyectos">
-      {/* Barra de filtros */}
       <TagsBar
         tags={activeTags}
         selectedTag={selectedTag}
         onSelectTag={setSelectedTag}
       />
 
-      {/* Secciones */}
       {Object.entries(filteredProjectsBySection).map(
         ([sectionName, projects]) => {
           if (!projects || projects.length === 0) return null;
@@ -115,10 +74,7 @@ export default function ProjectsContent({
               className="project-section"
               aria-labelledby={`section-${sectionName}`}
             >
-              <h3
-                id={`section-${sectionName}`}
-                className="section-title"
-              >
+              <h3 id={`section-${sectionName}`} className="section-title">
                 {sectionName}
               </h3>
 
@@ -128,15 +84,20 @@ export default function ProjectsContent({
 
                 const { title, intro, featured_image } = attributes;
 
-                const imagePath =
-                  featured_image?.data?.attributes?.url;
-
+                const imagePath = featured_image?.data?.attributes?.url;
                 const mainImageUrl = imagePath
                   ? `${baseUrl.replace(/\/$/, "")}/${imagePath.replace(/^\//, "")}`
                   : null;
 
                 return (
-                  <article key={id} className="project-card">
+                  //  onClick está en el padre (article)
+                  <article 
+                    key={id} 
+                    className="project-card"
+                    onClick={() => onSelectProject?.(project)}
+                    // Añadimos cursor pointer para indicar que es clickeable
+                    style={{ cursor: 'pointer' }} 
+                  >
                     {mainImageUrl && (
                       <div className="project-image-container">
                         <img
@@ -154,12 +115,14 @@ export default function ProjectsContent({
                     </div>
 
                     <div className="project-button-container">
+                      {/* El botón ya no necesita onClick propio, 
+                          el evento sube (burbujea) al article */}
                       <button
                         className="view-project"
-                        onClick={() =>
-                          onSelectProject?.(project)
-                        }
                         aria-label={`Ver detalle del proyecto ${title}`}
+                        // Opcional: pointer-events-none hace que el click 
+                        // atraviese el botón y le pegue directo a la tarjeta
+                        style={{ pointerEvents: 'none' }}
                       >
                         Ver Proyecto
                       </button>
