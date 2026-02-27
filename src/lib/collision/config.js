@@ -2,7 +2,7 @@
 // en este archivo guardo todas las constantes de configuracion de mi juego, asegurandome de que la parte visual coincida perfectamente con la logica interna
 
 // activo esto para ver las lineas de las colisiones en pantalla mientras estoy desarrollando
-export const DEBUG_MODE = true;
+export const DEBUG_MODE = false;
 
 // defino la escala visual, este valor es importante y debe ser igual al que puse en el css para que todo cuadre
 export const VISUAL_SCALE = 5.2; 
