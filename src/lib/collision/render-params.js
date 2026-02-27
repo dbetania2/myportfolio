@@ -1,18 +1,14 @@
-// src/lib/collision/render-params.js
-import { 
-    VISUAL_SCALE, 
-    VIEWPORT_WIDTH 
-} from './config.js';
+import { VISUAL_SCALE } from './config.js';
 
 export function getRenderParams() {
+    // El ancho del contenedor es 1406 segun tu CSS
+    const containerWidth = 1406;
+
     return {
-        // La escala que usará todo el sistema de colisiones
-        scale: VISUAL_SCALE, 
-        
-        // SOLO centramos la cámara. 
-       
-        horizontalIsoOffset: (VIEWPORT_WIDTH / 2) / VISUAL_SCALE, 
-        
-        verticalIsoOffset: 0 
+        scale: VISUAL_SCALE,
+        // Centrado horizontal basado en el ancho del PNG
+        horizontalIsoOffset: (containerWidth / 2) / VISUAL_SCALE,
+        // Ajuste vertical para que el rincon del dibujo coincida
+        verticalIsoOffset: 22
     };
 }
