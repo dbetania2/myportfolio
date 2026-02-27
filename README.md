@@ -32,8 +32,13 @@ El portfolio es un sitio web interactivo con un diseño de *pixel art*. La pági
 * **React**: Usado dentro de Astro para gestionar la interactividad y los estados de las ventanas.
 * **Node.js**: Se usa en el *backend* para gestionar los *scripts* del proyecto y para la integración con **Strapi**.
 * **Strapi**: Un CMS *headless* que utilizamos para la gestión de los datos de mi perfil y proyectos, permitiendo una actualización sencilla sin modificar el código.
-![alt text](image.png)
-![alt text](image-2.png)
+![alt text](image-3.png)
+![alt text](image-4.png)
+![alt text](image-5.png)
+![alt text](image-6.png)
+![alt text](image-7.png)
+
+
 
 ## Uso
 
