@@ -5,19 +5,19 @@
 export const DEBUG_MODE = true;
 
 // defino la escala visual, este valor es importante y debe ser igual al que puse en el css para que todo cuadre
-export const VISUAL_SCALE = 5.5; 
+export const VISUAL_SCALE = 5.2; 
 
 // establezco las dimensiones de mi contenedor visual donde se renderiza el mapa
-export const VIEWPORT_WIDTH = 800; 
-export const VIEWPORT_HEIGHT = 800;
+export const VIEWPORT_WIDTH = 0; 
+export const VIEWPORT_HEIGHT = 0;
 
 // indico el tamaño original de mi sprite antes de aplicarle cualquier escalado
 export const CHAR_SPRITE_WIDTH = 32;
 export const CHAR_SPRITE_HEIGHT = 32;
 
 // configuro el tamaño real de mi imagen de fondo
-export const MAP_WIDTH = 600; 
-export const MAP_HEIGHT = 600;
+export const MAP_WIDTH = 0; 
+export const MAP_HEIGHT = 0;
 
 // defino las dimensiones de los tiles segun como configure mi archivo json en tiled
 export const TILE_WIDTH = 64; 
